@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating Bespoke Learning Activities | Higher Education Horizon 2026</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React 18 & Babel for Vending Machine Simulator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.20/babel.min.js"></script>
+
+  <!-- Fonts: Lato for clean institutional typography, Orbitron & JetBrains Mono for LCD/Keypad -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@600;800;900&family=Lato:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  <script src="tailwind-config.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <header class="bg-white border-b-2 border-b-[#E60028] sticky top-0 z-50 shadow-sm">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Title -->
+      <div class="cursor-pointer" onclick="switchTab('home')">
+        <span class="text-xs font-bold tracking-wider uppercase text-[#000054]">Higher Education Horizon 2026</span>
+        <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">
+          Creating Bespoke Learning Activities
+        </h1>
+      </div>
+
+      <!-- Navigation Bar -->
+      <nav aria-label="Workshop Phases" class="flex items-center space-x-1 sm:space-x-2 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs sm:text-sm">
+        <button onclick="switchTab('home')" id="tabBtnHome" class="px-3 sm:px-3.5 py-1.5 rounded-md font-bold text-white bg-[#000054] transition shadow-sm">
+          Overview
+        </button>
+        <button onclick="switchTab('sequence')" id="tabBtnSequence" class="px-3 sm:px-3.5 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition">
+          Phase 1: Experience
+        </button>
+        <button onclick="switchTab('challenge')" id="tabBtnChallenge" class="px-3 sm:px-3.5 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition">
+          Phase 2: Challenge
+        </button>
+        <button onclick="switchTab('studio')" id="tabBtnStudio" class="px-3 sm:px-3.5 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition">
+          Phase 3: Prompt Tool
+        </button>
+        <button onclick="switchTab('showcase')" id="tabBtnShowcase" class="px-3 sm:px-3.5 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition">
+          Phase 4: Showcase &amp; Embed
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Notification Toast Container -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 pointer-events-none flex flex-col gap-2"></div>
+
+  <!-- Main Container -->
+  <main class="max-w-[1600px] w-full mx-auto px-4 sm:px-8 py-8 flex-1 font-canvas">
+
+    <!-- ===================================================================== -->
+    <!-- HOMEPAGE: 4-PHASE WORKSHOP OVERVIEW                                  -->
+    <!-- ===================================================================== -->
+    <div id="tabHome" class="space-y-8">
+      
+      <!-- Welcome Intro Banner -->
+      <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-3">
+        <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">
+          Workshop Toolkit
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#000054]">
+          Creating Bespoke Learning Activities
+        </h2>
+        <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-4xl">
+          An interactive toolkit to experience active learning sequences, identify friction gaps in course drafts, engineer simulation prompts with AI, and embed finished activities back into your course.
+        </p>
+      </div>
+
+      <!-- 4 Phases Grid Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- Phase 1 Card -->
+        <div onclick="switchTab('sequence')" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#000054] bg-blue-50 px-2.5 py-1 rounded">Phase 1</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">Experience the Sequence</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Experience a complete active learning module from the student's perspective.
+            </p>
+          </div>
+          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline">
+            Start Phase 1 &rarr;
+          </div>
+        </div>
+
+        <!-- Phase 2 Card -->
+        <div onclick="switchTab('challenge')" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 px-2.5 py-1 rounded">Phase 2</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">The Challenge: Review Drafts</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Review an unfinished course draft with your group, identify learning bottlenecks, and brainstorm active learning ideas.
+            </p>
+          </div>
+          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline">
+            Start Phase 2 &rarr;
+          </div>
+        </div>
+
+        <!-- Phase 3 Card -->
+        <div onclick="switchTab('studio')" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-1 rounded">Phase 3</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">AI Prompt Tool: Build Simulation</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Clarify your learning goal and friction moment, generate a prompt, and build your simulation.
+            </p>
+          </div>
+          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline">
+            Start Phase 3 &rarr;
+          </div>
+        </div>
+
+        <!-- Phase 4 Card -->
+        <div onclick="switchTab('showcase')" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded">Phase 4</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">Showcase &amp; Embed Simulation</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Share your simulation on the Padlet wall and embed it directly into your course sequence.
+            </p>
+          </div>
+          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline">
+            Start Phase 4 &rarr;
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- PHASE 1: EXPERIENCE THE SEQUENCE                                     -->
+    <!-- ===================================================================== -->
+    <div id="tabSequence" class="hidden space-y-6">
+
+      <!-- Consistent Header -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded">
+            Phase 1 of 4
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#000054] mt-1">
+            Phase 1: Experience the Sequence
+          </h2>
+          <p class="text-slate-600 text-sm mt-0.5">
+            Experience a complete active learning module from the student's perspective.
+          </p>
+        </div>
+      </div>
+
+      <!-- Canvas Chrome Mock Container -->
+      <div class="canvas-card rounded-lg overflow-hidden border border-slate-300 shadow-sm bg-white">
+        
+        <!-- Clean Banner Bar -->
+        <div class="bg-gradient-to-r from-[#000054] via-[#050570] to-[#0d1852] p-6 sm:p-7 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between border-b-4 border-[#E60028]">
+          <div class="space-y-1">
+            <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded shadow-sm">
+              Pre-class &gt; 2.1
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+              Week 2
+            </h2>
+            <h3 class="text-lg sm:text-xl font-bold text-slate-100">
+              Understanding User Requirements
+            </h3>
+          </div>
+        </div>
+
+        <!-- Canvas Body Content Area -->
+        <div class="p-6 sm:p-10 space-y-8 text-slate-800">
+          
+          <!-- SECTION 1: THE CHALLENGES IN CAPTURING USER NEEDS -->
+          <section class="space-y-4">
+            <p class="text-slate-600 text-[15px] leading-relaxed">
+              Now that we know the process of designing and engineering a new product. Let's look at the first step: how we capture the User Needs.
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-bold text-[#000054]">
+              The Challenges in Capturing User Needs
+            </h3>
+
+            <p class="text-slate-700 text-[15px] leading-relaxed">
+              Before we write the user requirements, we must look at the System Context. Using our vending machine example, think about how it is actually used.
+            </p>
+
+            <!-- Yellow Activity Callout Box (Duration removed) -->
+            <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
+              <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
+                💬
+              </div>
+              <div>
+                <p class="font-bold text-[#000054]">Consider your reaction after receiving a client brief</p>
+              </div>
+            </div>
+
+            <!-- Poll Scenario Grid -->
+            <div class="pt-2">
+              <h4 class="text-base font-bold text-slate-900 mb-2">Results</h4>
+              
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                
+                <!-- Left: Poll Question & Distinct Options -->
+                <div class="md:col-span-8 space-y-3 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                  <p class="text-slate-800 text-sm leading-relaxed">
+                    <strong>Imagine your team just received this official project brief from a client:</strong><br />
+                    <em class="text-slate-700">"We need a modern, user-friendly snack and drink machine installed in the campus building. It should be fast, reliable, convenient, and look sleek."</em>
+                  </p>
+
+                  <p class="text-slate-900 text-sm font-bold pt-1">
+                    When you receive a brief like this, how do you want to start engineering?
+                  </p>
+
+                  <!-- Poll Options -->
+                  <div class="space-y-2.5 pt-1" id="canvasPollContainer">
+                    
+                    <!-- Option A -->
+                    <div onclick="voteCanvasPoll('A')" class="p-3 rounded-lg border border-slate-200 hover:border-[#000054] hover:bg-slate-50 cursor-pointer transition relative overflow-hidden" id="pollOptA">
+                      <div class="flex justify-between items-center text-xs sm:text-sm font-medium relative z-10">
+                        <span>A. Accept the brief as is and start designing the machine immediately.</span>
+                        <span class="font-bold text-[#000054] ml-2" id="percentA">0%</span>
+                      </div>
+                      <div id="barA" class="absolute top-0 bottom-0 left-0 bg-blue-100 opacity-60 transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+
+                    <!-- Option B -->
+                    <div onclick="voteCanvasPoll('B')" class="p-3 rounded-lg border border-slate-200 hover:border-[#000054] hover:bg-slate-50 cursor-pointer transition relative overflow-hidden" id="pollOptB">
+                      <div class="flex justify-between items-center text-xs sm:text-sm font-medium relative z-10">
+                        <span>B. Carry out a study based on a previous vending machine project to save time.</span>
+                        <span class="font-bold text-[#000054] ml-2" id="percentB">0%</span>
+                      </div>
+                      <div id="barB" class="absolute top-0 bottom-0 left-0 bg-blue-100 opacity-60 transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+
+                    <!-- Option C (Best Practice) -->
+                    <div onclick="voteCanvasPoll('C')" class="p-3 rounded-lg border border-slate-200 hover:border-[#000054] hover:bg-slate-50 cursor-pointer transition relative overflow-hidden" id="pollOptC">
+                      <div class="flex justify-between items-center text-xs sm:text-sm font-medium relative z-10">
+                        <span>C. Ask the client clarifying questions to understand their context, environment, and user base.</span>
+                        <span class="font-bold text-[#000054] ml-2" id="percentC">0%</span>
+                      </div>
+                      <div id="barC" class="absolute top-0 bottom-0 left-0 bg-emerald-100 opacity-60 transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+
+                    <!-- Option D -->
+                    <div onclick="voteCanvasPoll('D')" class="p-3 rounded-lg border border-slate-200 hover:border-[#000054] hover:bg-slate-50 cursor-pointer transition relative overflow-hidden" id="pollOptD">
+                      <div class="flex justify-between items-center text-xs sm:text-sm font-medium relative z-10">
+                        <span>D. Push the brief back to the client and demand a technical specification.</span>
+                        <span class="font-bold text-[#000054] ml-2" id="percentD">0%</span>
+                      </div>
+                      <div id="barD" class="absolute top-0 bottom-0 left-0 bg-blue-100 opacity-60 transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+
+                  </div>
+
+                  <!-- Dynamic Option-Specific Feedback Box -->
+                  <div id="canvasPollFeedback" class="hidden mt-3 p-3.5 rounded-lg border text-xs sm:text-sm"></div>
+                </div>
+
+                <!-- Right: Authentic Context Photo -->
+                <div class="md:col-span-4 flex flex-col items-center">
+                  <div class="w-full rounded-xl overflow-hidden border border-slate-300 shadow-sm bg-slate-100">
+                    <img 
+                      src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=80" 
+                      alt="Student purchasing and collecting a drink from a vending machine on campus"
+                      class="w-full h-64 object-cover object-center"
+                      onerror="this.src='https://placehold.co/400x300/000054/ffffff?text=Vending+Machine+Interaction'"
+                    />
+                  </div>
+                  <span class="text-[11px] text-slate-500 mt-1.5 text-center">
+                    Observing physical posture, reach, payment, and retrieval ergonomics
+                  </span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Canvas Callout Quote: Capturing a user's 'needs' is rarely straightforward -->
+            <div class="my-5 p-5 rounded-xl bg-slate-50 border-l-4 border-[#000054] border border-slate-200 text-slate-800 space-y-2">
+              <div class="flex items-center space-x-2 font-bold text-[#000054] text-sm sm:text-base">
+                <svg class="w-4 h-4 text-[#000054]" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" /></svg>
+                <span>Capturing a user's "needs" is rarely straightforward.</span>
+              </div>
+              <p class="text-sm font-semibold text-slate-700">Think of a user requirement as a wish list:</p>
+              <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-700">
+                <li>Users are not professionals who know exactly what they are after.</li>
+                <li>It is unreasonable to expect the user to provide an exact list of requirements or to adhere to it throughout the system's development.</li>
+                <li>The "requirements problem" always stems from the difficulty in identifying, interpreting, and understanding the most fundamental hopes of the user.</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <!-- SECTION 2: HOW TO CAPTURE USER NEEDS & THE SIMULATOR -->
+          <section class="space-y-4 pt-4">
+            <h3 class="text-xl sm:text-2xl font-bold text-[#000054]">
+              How to Capture User Needs
+            </h3>
+            
+            <p class="text-slate-700 text-[15px] leading-relaxed">
+              For the vending machine system, you might have used it before. Imagine yourself as a user of it.
+            </p>
+
+            <!-- Yellow Activity Callout Box (Duration removed) -->
+            <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
+              <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
+                🔍
+              </div>
+              <div>
+                <p class="font-bold text-[#000054]">Think about how you interact with the system and what you need from it.</p>
+              </div>
+            </div>
+
+            <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+              Consider which buttons the user has to press, how they pay (cash, coin or make a digital purchase), how they pick up the product, whether they need a straw, what to do if the user needs to call for help/report, and whether to take change.
+            </p>
+
+            <!-- Vending Machine Simulator Container -->
+            <div class="my-6 p-3 sm:p-6 bg-slate-900/5 rounded-2xl border border-slate-300 flex justify-center items-center overflow-x-auto">
+              <div id="vending-machine-root" class="w-full flex justify-center py-2"></div>
+            </div>
+          </section>
+
+          <!-- SECTION 3: WRITING MEASURABLE USER REQUIREMENTS -->
+          <section class="space-y-4 pt-4">
+            <h3 class="text-xl sm:text-2xl font-bold text-[#000054]">
+              Writing Measurable User Requirements
+            </h3>
+
+            <p class="text-slate-700 text-[15px] leading-relaxed">
+              Finally, let's turn a "wish" into a "requirement". A good requirement must be <strong>Specific, Measurable, and Verifiable</strong>. It is very common to find this challenging when writing user requirements.
+            </p>
+
+            <!-- Yellow Activity Callout Box (Duration removed) -->
+            <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
+              <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
+                ✏️
+              </div>
+              <div>
+                <p class="font-bold text-[#000054]">Test your skills in identifying measurable requirements.</p>
+              </div>
+            </div>
+
+            <!-- Measurable Requirements Table -->
+            <div class="overflow-x-auto rounded-lg border border-slate-300 shadow-sm bg-white">
+              <table class="req-table">
+                <thead>
+                  <tr>
+                    <th class="header-req">Written Requirements</th>
+                    <th class="header-measurable">Is it a measurable requirement?</th>
+                    <th class="header-why">Why?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Row 1 -->
+                  <tr id="row-req-1">
+                    <td class="font-medium text-slate-800">It should accept many payments.</td>
+                    <td>
+                      <div class="dropdown-container">
+                        <select id="req-v3-1" data-correct="No" class="req-select" onchange="handleReqChange(this)">
+                          <option value="Select">Select...</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                        <span class="feedback-icon"></span>
+                      </div>
+                    </td>
+                    <td class="feedback-cell" data-feedback="The requirement is too vague. How many exactly?"></td>
+                  </tr>
+
+                  <!-- Row 2 -->
+                  <tr id="row-req-2">
+                    <td class="font-medium text-slate-800">The system shall dispense the selected product within 5 seconds of payment confirmation.</td>
+                    <td>
+                      <div class="dropdown-container">
+                        <select id="req-v3-2" data-correct="Yes" class="req-select" onchange="handleReqChange(this)">
+                          <option value="Select">Select...</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                        <span class="feedback-icon"></span>
+                      </div>
+                    </td>
+                    <td class="feedback-cell" data-feedback="We can use a stopwatch to 'verify' 5 seconds. 'Fast' is an opinion."></td>
+                  </tr>
+
+                  <!-- Row 3 -->
+                  <tr id="row-req-3">
+                    <td class="font-medium text-slate-800">The system shall support Cash, Visa, Mastercard, and Momo QR payments.</td>
+                    <td>
+                      <div class="dropdown-container">
+                        <select id="req-v3-3" data-correct="Yes" class="req-select" onchange="handleReqChange(this)">
+                          <option value="Select">Select...</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                        <span class="feedback-icon"></span>
+                      </div>
+                    </td>
+                    <td class="feedback-cell" data-feedback="We can test each specific payment method."></td>
+                  </tr>
+
+                  <!-- Row 4 -->
+                  <tr id="row-req-4">
+                    <td class="font-medium text-slate-800">The machine should be fast.</td>
+                    <td>
+                      <div class="dropdown-container">
+                        <select id="req-v3-4" data-correct="No" class="req-select" onchange="handleReqChange(this)">
+                          <option value="Select">Select...</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                        <span class="feedback-icon"></span>
+                      </div>
+                    </td>
+                    <td class="feedback-cell" data-feedback="The requirement is too vague. How can we know what counts as fast?"></td>
+                  </tr>
+
+                  <!-- Row 5 -->
+                  <tr id="row-req-5">
+                    <td class="font-medium text-slate-800">The system shall maintain internal storage temperature between 2°C and 5°C.</td>
+                    <td>
+                      <div class="dropdown-container">
+                        <select id="req-v3-5" data-correct="Yes" class="req-select" onchange="handleReqChange(this)">
+                          <option value="Select">Select...</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                        <span class="feedback-icon"></span>
+                      </div>
+                    </td>
+                    <td class="feedback-cell" data-feedback="We can measure the temperature with a sensor."></td>
+                  </tr>
+
+                  <!-- Row 6 -->
+                  <tr id="row-req-6">
+                    <td class="font-medium text-slate-800">The drinks should be cold.</td>
+                    <td>
+                      <div class="dropdown-container">
+                        <select id="req-v3-6" data-correct="No" class="req-select" onchange="handleReqChange(this)">
+                          <option value="Select">Select...</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                        <span class="feedback-icon"></span>
+                      </div>
+                    </td>
+                    <td class="feedback-cell" data-feedback="Requirement is too vague; need a measurable temperature."></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Table Buttons -->
+            <div class="flex items-center justify-end gap-3 pt-2">
+              <button onclick="saveReqAnswers()" class="px-4 py-2 bg-[#ccccdd] hover:bg-[#000054] hover:text-white text-[#000054] rounded font-bold text-xs sm:text-sm transition shadow-sm">
+                Save Answers
+              </button>
+              <button onclick="resetReqAnswers()" class="px-4 py-2 bg-[#fef4cc] hover:bg-[#fac800] text-[#000054] rounded font-bold text-xs sm:text-sm transition shadow-sm">
+                Start Over
+              </button>
+            </div>
+
+            <!-- Wrap-Up Paragraph (Australian English: practise) -->
+            <div class="pt-4">
+              <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">
+                Good work! In class, we will collaborate on a client brief to practise identifying user needs for a complex engineering project. You will write the user requirements, which is a core part of your upcoming assessment.
+              </p>
+            </div>
+
+            <!-- Clear Navigation Footer -->
+            <div class="pt-6 flex items-center justify-between text-xs sm:text-sm font-semibold text-[#000054]">
+              <button onclick="switchTab('home')" class="px-4 py-2 rounded border border-slate-300 hover:bg-slate-100 flex items-center gap-1">
+                <span>&lt;</span> Previous: Overview
+              </button>
+              <button onclick="switchTab('challenge')" class="px-5 py-2.5 rounded bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1.5 shadow-sm">
+                <span>Next: Phase 2 — The Challenge</span> <span>&gt;</span>
+              </button>
+            </div>
+
+          </section>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- PHASE 2: THE CHALLENGE (UNFINISHED PASSIVE SEQUENCES)                -->
+    <!-- ===================================================================== -->
+    <div id="tabChallenge" class="hidden space-y-6">
+      
+      <!-- Phase 2 Header -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded">
+            Phase 2 of 4
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#000054] mt-1">
+            Phase 2: The Challenge
+          </h2>
+          <p class="text-slate-600 text-sm mt-0.5">
+            Review an unfinished passive course draft with your group, identify learning bottlenecks, and brainstorm active learning ideas.
+          </p>
+        </div>
+      </div>
+
+      <!-- STEP 1: CHOOSE THE TOPIC OPTION -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">1</span>
+            <span>Step 1: Choose the topic option for your group to design the activities</span>
+          </h3>
+          <span class="text-xs text-slate-500 font-medium">You can also choose your own expertise topic</span>
+        </div>
+
+        <!-- 3 Distinguished Topic Cards with distinct visual identities -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          
+          <!-- Option 1: Indigo / Design -->
+          <button 
+            onclick="selectChallengeOption(1)" 
+            id="btnChallengeOpt1" 
+            class="p-5 text-left rounded-xl border-2 border-indigo-600 bg-indigo-50/70 text-slate-900 transition flex flex-col justify-between shadow-sm relative overflow-hidden"
+          >
+            <div class="w-1.5 absolute inset-y-0 left-0 bg-indigo-600"></div>
+            <div class="flex items-center justify-between w-full mb-1.5 pl-1">
+              <span class="text-sm font-bold text-indigo-700 uppercase tracking-wider">Option 1</span>
+              <span class="text-sm bg-white px-2.5 py-0.5 rounded border border-indigo-200 text-indigo-800 font-semibold">Design &amp; UI</span>
+            </div>
+            <span class="text-base sm:text-lg font-bold text-slate-900 pl-1">Colour Theory in Digital Design</span>
+            <span class="text-sm text-slate-700 font-medium mt-2 pl-1">Students designing a mobile app palette</span>
+          </button>
+
+          <!-- Option 2: Emerald / Business -->
+          <button 
+            onclick="selectChallengeOption(2)" 
+            id="btnChallengeOpt2" 
+            class="p-5 text-left rounded-xl border-2 border-slate-200 bg-white hover:border-emerald-300 text-slate-700 transition flex flex-col justify-between relative overflow-hidden"
+          >
+            <div class="w-1.5 absolute inset-y-0 left-0 bg-emerald-600 opacity-0 transition-opacity" id="accentBarOpt2"></div>
+            <div class="flex items-center justify-between w-full mb-1.5 pl-1">
+              <span class="text-sm font-bold text-emerald-700 uppercase tracking-wider">Option 2</span>
+              <span class="text-sm bg-white px-2.5 py-0.5 rounded border border-slate-200 text-slate-700 font-semibold">Business &amp; Mgmt</span>
+            </div>
+            <span class="text-base sm:text-lg font-bold text-slate-900 pl-1">Event Budget Planning</span>
+            <span class="text-sm text-slate-700 font-medium mt-2 pl-1">Managing cash flow &amp; contingency buffers</span>
+          </button>
+
+          <!-- Option 3: Amber / Media -->
+          <button 
+            onclick="selectChallengeOption(3)" 
+            id="btnChallengeOpt3" 
+            class="p-5 text-left rounded-xl border-2 border-slate-200 bg-white hover:border-amber-300 text-slate-700 transition flex flex-col justify-between relative overflow-hidden"
+          >
+            <div class="w-1.5 absolute inset-y-0 left-0 bg-amber-500 opacity-0 transition-opacity" id="accentBarOpt3"></div>
+            <div class="flex items-center justify-between w-full mb-1.5 pl-1">
+              <span class="text-sm font-bold text-amber-700 uppercase tracking-wider">Option 3</span>
+              <span class="text-sm bg-white px-2.5 py-0.5 rounded border border-slate-200 text-slate-700 font-semibold">Media &amp; Film</span>
+            </div>
+            <span class="text-base sm:text-lg font-bold text-slate-900 pl-1">Three-Point Studio Lighting</span>
+            <span class="text-sm text-slate-700 font-medium mt-2 pl-1">Crafting visual mood &amp; actor character</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: READ THROUGH THE SEQUENCE -->
+      <div class="space-y-2">
+        <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">2</span>
+          <span>Step 2: Read through the sequence</span>
+        </h3>
+
+        <!-- Course Sequence Container with Minimal Page Banner -->
+        <div class="canvas-card rounded-xl border border-slate-300 shadow-sm bg-white overflow-hidden">
+          
+          <!-- Distinct Course Sequence Banner (Removed 'Needs Active Learning Spark' badge) -->
+          <div class="bg-gradient-to-r from-[#000054] via-[#00006e] to-[#0d1852] px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-4 border-[#FAC800]">
+            <div>
+              <div class="inline-flex items-center gap-2 mb-1">
+                <span class="bg-[#FAC800] text-[#000054] text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-sm">
+                  Course Reading Sequence
+                </span>
+                <span class="bg-white/20 text-white text-[11px] font-semibold px-2 py-0.5 rounded">
+                  Unfinished Draft
+                </span>
+              </div>
+              <h4 class="text-lg sm:text-xl font-bold tracking-tight text-white" id="currentSequenceBanner">
+                Option 1: Colour Theory in Digital Design
+              </h4>
+            </div>
+          </div>
+
+          <!-- DRAFT OPTION 1 CONTENT (Australian English applied) -->
+          <div id="contentChallengeOpt1" class="p-6 sm:p-8 space-y-5 text-slate-800">
+            <div>
+              <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
+                Colour Theory in Digital Design
+              </h4>
+              <p class="text-slate-600 text-xs sm:text-sm mt-1">
+                Context: You are currently working in design teams to create a mobile app for campus students. Before finalising your high-fidelity user interface, work through this guide to understand how colour choices directly impact user experience and navigation.
+              </p>
+            </div>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">Why does colour matter?</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                Have you ever visited a website and immediately felt overwhelmed, or struggled to read light-grey text on a white background? Colour isn’t just decoration—it quietly guides how people feel, where they look, and whether an app feels intuitive or exhausting to use.
+              </p>
+            </section>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">The Colour Wheel: Harmony &amp; Contrast</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                You don’t need an art degree to build a great palette. Most everyday choices come down to two basic ideas:
+              </p>
+              <div class="space-y-2.5 pl-2">
+                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-[#000054] border border-slate-200">
+                  <p class="text-slate-800 text-sm leading-relaxed">
+                    <strong>Complementary Colours:</strong> These sit directly opposite each other on the colour wheel (like deep blue and bright orange). Because they clash in high contrast, they naturally grab attention. They’re fantastic for warning badges or a big "Submit" button you want no one to miss.
+                  </p>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-indigo-400 border border-slate-200">
+                  <p class="text-slate-800 text-sm leading-relaxed">
+                    <strong>Analogous Colours:</strong> These sit right next to each other (like sky blue, teal, and soft green). They feel calm, cohesive, and easy on the eyes. They make great backgrounds because they don’t fight for attention.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">The Catch: Contrast and Legibility</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                A combination might look aesthetic to you, but if a student in bright sunlight or someone with colour vision differences can’t read it, the design fails. Good design always balances mood with readable contrast ratios.
+              </p>
+            </section>
+
+            <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-medium">
+              (End of text. In the final assessment, students have to design a complete, accessible app landing page.)
+            </div>
+          </div>
+
+          <!-- DRAFT OPTION 2 CONTENT (Australian English applied) -->
+          <div id="contentChallengeOpt2" class="hidden p-6 sm:p-8 space-y-5 text-slate-800">
+            <div>
+              <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
+                Event Budget Planning
+              </h4>
+              <p class="text-slate-600 text-xs sm:text-sm mt-1">
+                Context: Your committee is organising a commercial campus event for 300 attendees. Before pitching your financial plan to the sponsors, review this foundational guide on managing fixed versus variable operational expenses.
+              </p>
+            </div>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">Where does all the money go?</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                Organising an event is exciting until the bills arrive. The number-one reason campus festivals, charity fundraisers, or conferences run into trouble isn’t a lack of great ideas—it’s surprise costs that spiral out of control.
+              </p>
+            </section>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">Two Buckets: Fixed vs. Variable Costs</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                To keep sanity and finances intact, event planners split expenses into two straightforward buckets:
+              </p>
+              <div class="space-y-2.5 pl-2">
+                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-[#000054] border border-slate-200">
+                  <p class="text-slate-800 text-sm leading-relaxed">
+                    <strong>Fixed Costs (The Non-Negotiables):</strong> These stay the exact same whether 10 people show up or 200 do. Think venue hire, stage permits, standard insurance, or sound equipment. You pay for them once.
+                  </p>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-emerald-500 border border-slate-200">
+                  <p class="text-slate-800 text-sm leading-relaxed">
+                    <strong>Variable Costs (The Scale-Ups):</strong> These grow with every person who walks through the door. Think catering portions, printed name badges, welcome drinks, and extra security staff.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">The Golden Rule: The Contingency Buffer</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                Even the best-laid plans go sideways. A caterer might cancel last minute, or rain forces you to hire an emergency marquee. That’s why planners always set aside a 10% to 15% rainy-day buffer. If you don’t plan for surprises upfront, they come out of your own pocket.
+              </p>
+            </section>
+
+            <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-medium">
+              (End of text. For their main project, students must submit a viable commercial budget for a 300-person event.)
+            </div>
+          </div>
+
+          <!-- DRAFT OPTION 3 CONTENT (Australian English applied) -->
+          <div id="contentChallengeOpt3" class="hidden p-6 sm:p-8 space-y-5 text-slate-800">
+            <div>
+              <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
+                Three-Point Studio Lighting
+              </h4>
+              <p class="text-slate-600 text-xs sm:text-sm mt-1">
+                Context: As part of your upcoming digital video assessment, you must light and record an interview subject in the broadcast studio. Learn how to transform flat camera imagery into three-dimensional cinematic depth.
+              </p>
+            </div>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">Why do smartphone videos look flat?</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                Have you ever tried recording an interview or a presentation video on your phone, only to look washed out, tired, or lost in the background? Real life is three-dimensional, but cameras flatten everything onto a 2D screen. Lighting is the trick that puts life, shape, and depth back in.
+              </p>
+            </section>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">The Classic Three-Light Recipe</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                You don’t need a Hollywood budget to get a cinematic look. Most professional shoots rely on three basic lights:
+              </p>
+              <div class="space-y-2.5 pl-2">
+                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-[#000054] border border-slate-200">
+                  <p class="text-slate-800 text-sm leading-relaxed">
+                    <strong>Key Light:</strong> Your main hero light. It sits off to one side at an angle, giving the face shape and character while casting natural shadows.
+                  </p>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-amber-400 border border-slate-200">
+                  <p class="text-slate-800 text-sm leading-relaxed">
+                    <strong>Fill Light:</strong> Placed on the other side. Its job is gentle teamwork—it softens those dark shadows so the subject doesn’t look harsh or dramatic (unless that’s what you want!).
+                  </p>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-purple-500 border border-slate-200">
+                  <p class="text-slate-800 text-sm leading-relaxed">
+                    <strong>Back Light (Hair Light):</strong> Placed behind and above, pointing down. It paints a subtle halo of light along the shoulders and hair, popping the person forward so they don’t melt into a dark wall.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="space-y-2">
+              <h5 class="text-base font-bold text-slate-900">The Catch: Mood and Balance</h5>
+              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
+                Adjusting just one dimmer switch completely changes the story—from a friendly YouTube explainer to a moody film-noir interrogation.
+              </p>
+            </section>
+
+            <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-medium">
+              (End of text. In their studio assessment, students must light a live actor to match a specific emotional scene.)
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STEP 3: IDENTIFY OUTCOMES & ADD NOTES -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">3</span>
+            <span>Step 3: Identify what students should be able to achieve, the outcomes of the activities that they will design. Add the note to the board</span>
+          </h3>
+          <button 
+            onclick="transferActiveNotesToStudio()"
+            class="px-4 py-2 bg-[#000054] hover:bg-[#00003c] text-white text-xs sm:text-sm font-bold rounded-lg transition shadow-sm flex items-center gap-1.5"
+          >
+            <span>Transfer to AI Prompt Tool</span> <span>&rarr;</span>
+          </button>
+        </div>
+
+        <!-- Streamlined Sticky Note Input Bar -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Your Group</label>
+              <input 
+                id="stickyAuthor" 
+                type="text" 
+                placeholder="e.g. Group 3" 
+                class="w-full border border-slate-300 rounded-lg p-2 text-xs sm:text-sm bg-white text-slate-800 focus:border-[#000054]"
+              />
+            </div>
+            <div class="sm:col-span-7">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Learning Outcome / Activity Idea</label>
+              <input 
+                id="stickyText" 
+                type="text" 
+                placeholder="What should students achieve? What will cause them to hesitate or practise?"
+                class="w-full border border-slate-300 rounded-lg p-2 text-xs sm:text-sm bg-white text-slate-800 focus:border-[#000054]"
+                onkeydown="if(event.key === 'Enter') addStickyNote();"
+              />
+            </div>
+            <div class="sm:col-span-2 flex items-end">
+              <button 
+                onclick="addStickyNote()" 
+                class="w-full py-2 bg-[#E60028] hover:bg-[#b80020] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm transition"
+              >
+                + Add Note
+              </button>
+            </div>
+          </div>
+
+          <!-- Sticky Notes Board -->
+          <div id="stickyNotesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-2">
+            <!-- Dynamically populated sticky notes -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Clear Navigation Footer -->
+      <div class="pt-4 flex justify-between items-center text-xs sm:text-sm font-semibold">
+        <button onclick="switchTab('sequence')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1">
+          <span>&lt;</span> Previous: Phase 1 — Experience
+        </button>
+        <button onclick="switchTab('studio')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1 shadow-sm">
+          <span>Next: Phase 3 — AI Prompt Tool</span> <span>&gt;</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- PHASE 3: AI PROMPT TOOL (CLARIFY & SHAPE)                             -->
+    <!-- ===================================================================== -->
+    <div id="tabStudio" class="hidden space-y-6">
+      
+      <!-- Phase 3 Header -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded">
+            Phase 3 of 4
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#000054] mt-1">
+            Phase 3: AI Prompt Tool
+          </h2>
+          <p class="text-slate-600 text-sm mt-0.5">
+            Clarify your pedagogical objectives, generate a structured prompt, and create the simulation.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 1: Clarify Pedagogical Simulation Inputs -->
+      <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-5">
+        <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">1</span>
+          <span>Step 1: Clarify pedagogical simulation inputs</span>
+        </h3>
+
+        <!-- Reordered Q1 -> Q4 Grid (Australian English applied) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- Q1: Learning Goal & Cognitive Friction -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800">
+              1. Learning goal and cognitive friction (the hesitation moment)
+            </label>
+            <textarea 
+              id="inputGoalFriction" 
+              rows="4" 
+              class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition" 
+              placeholder="e.g. Students realise that aesthetically pleasing colours fail under bright sunlight or colour blindness. The simulation causes them to fail WCAG contrast checks when adjusting hue sliders."
+              oninput="generateCleanPrompt()"
+            ></textarea>
+            <span class="text-xs text-slate-500 block">
+              What moment of hesitation or dilemma forces students to recognise an unstated need?
+            </span>
+          </div>
+
+          <!-- Q2: Who are the learners? -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800">
+              2. Who are the learners? (context and discipline)
+            </label>
+            <textarea 
+              id="inputLearners" 
+              rows="4" 
+              class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition" 
+              placeholder="e.g. 2nd-year undergraduate students in Graphic Design, Web UX, or Digital Media."
+              oninput="generateCleanPrompt()"
+            ></textarea>
+            <span class="text-xs text-slate-500 block">
+              Who is participating in this learning activity?
+            </span>
+          </div>
+
+          <!-- Q3: What is the simulation about? -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800">
+              3. What is this simulation about? (core mechanics and behaviours)
+            </label>
+            <textarea 
+              id="inputSimulationAbout" 
+              rows="4" 
+              class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition" 
+              placeholder="e.g. An interactive digital colour palette tester with hue, saturation, and lightness sliders, live button preview, and a simulated bright sunlight / colour-blindness toggle filter."
+              oninput="generateCleanPrompt()"
+            ></textarea>
+            <span class="text-xs text-slate-500 block">
+              What digital or physical tool are students interacting with?
+            </span>
+          </div>
+
+          <!-- Q4: Post-simulation task -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800">
+              4. Post-simulation student task (what they do immediately after)
+            </label>
+            <textarea 
+              id="inputPostTask" 
+              rows="4" 
+              class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition" 
+              placeholder="e.g. Adjust their palette until it passes WCAG AA contrast, and write 3 verifiable engineering requirements for their mobile app interface."
+              oninput="generateCleanPrompt()"
+            ></textarea>
+            <span class="text-xs text-slate-500 block">
+              What do students do with their observation to bridge to the assessment?
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Step 2: Generated Prompt Output -->
+      <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-slate-100 gap-3">
+          <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">2</span>
+            <span>Step 2: Generated simulation prompt</span>
+          </h3>
+          <button onclick="copyPromptText()" id="btnCopyPrompt" class="px-4 py-2 bg-[#E60028] hover:bg-[#b80020] text-white text-xs sm:text-sm font-bold rounded-lg transition flex items-center justify-center gap-2 shadow-sm self-start sm:self-auto">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            <span>Copy Prompt</span>
+          </button>
+        </div>
+
+        <pre id="cleanPromptOutput" class="w-full h-72 sm:h-80 bg-slate-900 text-slate-100 p-4 sm:p-5 rounded-xl font-mono text-[13px] leading-relaxed overflow-y-auto whitespace-pre-wrap select-all border border-slate-800"></pre>
+      </div>
+
+      <!-- Step 3: Generate the Simulation in Gemini Canvas -->
+      <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">3</span>
+          <span>Step 3: Generate the simulation in Gemini</span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm text-slate-700">
+          
+          <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-[#000054] flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-blue-100 text-[#000054] flex items-center justify-center text-xs font-black">a</span>
+              <span>Open Gemini &amp; Sign In</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">
+              Navigate to <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="text-[#000054] underline font-semibold">gemini.google.com</a> and sign in with your Google account.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-[#000054] flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-blue-100 text-[#000054] flex items-center justify-center text-xs font-black">b</span>
+              <span>Paste Prompt into Canvas</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">
+              Paste the copied prompt into the chat. Gemini will automatically open the interactive Canvas editor on the right side of the screen and write the code.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+            <div class="font-bold text-[#000054] flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-blue-100 text-[#000054] flex items-center justify-center text-xs font-black">c</span>
+              <span>Preview &amp; Refine</span>
+            </div>
+            <p class="text-slate-600 leading-relaxed">
+              Click <strong>Preview</strong> in Gemini Canvas to interact with your simulation. Ask Gemini to tweak button labels, add audio, or intensify the friction moment.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Clear Navigation Footer -->
+      <div class="pt-4 flex justify-between items-center text-xs sm:text-sm font-semibold">
+        <button onclick="switchTab('challenge')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
+          &lt; Previous: Phase 2 — The Challenge
+        </button>
+        <button onclick="switchTab('showcase')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm">
+          Next: Phase 4 — Showcase &amp; Embed &gt;
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- PHASE 4: SHOWCASE & EMBED SIMULATION                                 -->
+    <!-- ===================================================================== -->
+    <div id="tabShowcase" class="hidden space-y-6">
+      
+      <!-- Phase 4 Header -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded">
+            Phase 4 of 4
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#000054] mt-1">
+            Activities and Simulations Showcase Wall
+          </h2>
+          <p class="text-slate-600 text-sm mt-0.5">
+            Share your group's simulation, celebrate creative friction points, and explore what others built.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a 
+            href="https://padlet.com/rmit_university/my-stunning-padlet-s023mnpvkvgut2qrx9yk" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="px-4 py-2 bg-[#000054] hover:bg-[#00003c] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm transition flex items-center gap-1.5"
+          >
+            <span>Open Padlet in New Tab</span>
+            <span>↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Embedded Padlet Container -->
+      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:6px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4">
+          <p style="padding:0;margin:0">
+            <iframe 
+              src="https://padlet.com/embed/s023mnpvkvgut2qrx9yk" 
+              frameborder="0" 
+              allow="camera;microphone;geolocation;display-capture;clipboard-write" 
+              style="width:100%;height:580px;display:block;padding:0;margin:0"
+            ></iframe>
+          </p>
+        </div>
+      </div>
+
+      <!-- SEQUENCE & SIMULATION COMPILER / EMBEDDER -->
+      <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-5">
+        <div class="border-b border-slate-200 pb-3">
+          <h3 class="text-base sm:text-lg font-bold text-[#000054]">
+            Embed Your Simulation Back into the Sequence
+          </h3>
+          <p class="text-slate-600 text-sm mt-0.5">
+            Choose your sequence option, choose where to place the simulation, and drop in your HTML file to compile the complete active learning module.
+          </p>
+        </div>
+
+        <!-- Top Row: Step 1 & Step 2 in 2-Column Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- Control 1: Sequence Option -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800">
+              1. Choose Course Sequence
+            </label>
+            <select 
+              id="embedSequenceOption" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-800 focus:border-[#000054] focus:ring-1 focus:ring-[#000054]"
+              onchange="compileCompleteSequence()"
+            >
+              <option value="1">Option 1: Colour Theory in Digital Design</option>
+              <option value="2">Option 2: Event Budget Planning</option>
+              <option value="3">Option 3: Three-Point Studio Lighting</option>
+              <option value="custom">Custom / Own Topic Draft</option>
+            </select>
+            <span class="text-xs text-slate-500 block">Select which reading draft to embed into.</span>
+          </div>
+
+          <!-- Control 2: Placement Position -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800">
+              2. Place Simulation Inside
+            </label>
+            <select 
+              id="embedPlacementPosition" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-800 focus:border-[#000054] focus:ring-1 focus:ring-[#000054]"
+              onchange="compileCompleteSequence()"
+            >
+              <option value="section2" selected>Inside Section 2: Core Concept (Recommended)</option>
+              <option value="section1">After Section 1: Opening Hook</option>
+              <option value="section3">Before Section 3: Assessment Wrap-up</option>
+            </select>
+            <span class="text-xs text-slate-500 block">Determines where the friction trigger appears.</span>
+          </div>
+
+        </div>
+
+        <!-- Bottom Row: Step 3 on Left, Compile Button Aligned on Right -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-end pt-1">
+          
+          <!-- Control 3: Drag & Drop / Upload HTML -->
+          <div class="lg:col-span-8 space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800">
+              3. Simulation HTML File or Code
+            </label>
+            <div 
+              id="simDropzone" 
+              class="border-2 border-dashed border-slate-300 hover:border-[#000054] bg-slate-50 hover:bg-blue-50/40 rounded-lg p-3 text-center cursor-pointer transition flex flex-col items-center justify-center min-h-[96px]"
+              onclick="document.getElementById('simFileInput').click()"
+              ondragover="handleDragOver(event)"
+              ondragleave="handleDragLeave(event)"
+              ondrop="handleFileDrop(event)"
+            >
+              <svg class="w-6 h-6 text-[#000054] mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+              <span class="text-xs font-bold text-slate-800" id="dropzoneLabel">Drag &amp; drop .html file here, or click to browse</span>
+              <span class="text-[11px] text-slate-500" id="dropzoneSubLabel">Accepts files saved from Gemini Canvas or Claude</span>
+              <input type="file" id="simFileInput" accept=".html,.htm" class="hidden" onchange="handleFileSelect(event)">
+            </div>
+          </div>
+
+          <!-- Compile Preview Button on the Right -->
+          <div class="lg:col-span-4 flex flex-col justify-end">
+            <button 
+              onclick="compileCompleteSequence()" 
+              class="w-full min-h-[96px] px-6 py-3 bg-[#E60028] hover:bg-[#b80020] text-white font-bold rounded-lg transition shadow-md flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95"
+            >
+              <span class="text-base sm:text-lg flex items-center gap-1.5">
+                <span>⚡ Compile &amp; Refresh Preview</span>
+              </span>
+              <span class="text-xs font-normal text-white/90">Assemble simulation into reading sequence</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Collapsible Raw Code / Custom Text Editor -->
+        <div class="pt-1">
+          <details class="text-xs sm:text-sm text-slate-700 group">
+            <summary class="cursor-pointer font-bold text-[#000054] hover:underline list-none flex items-center gap-1">
+              <span class="group-open:rotate-90 transition-transform inline-block">&rsaquo;</span>
+              <span>Advanced: View/Edit Raw Simulation Code or Custom Course Text</span>
+            </summary>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 pt-2 border-t border-slate-200">
+              <div class="space-y-1">
+                <label class="block font-bold text-xs text-slate-700">Custom Sequence Text (if "Custom" option is chosen)</label>
+                <textarea 
+                  id="embedCustomSeqText" 
+                  rows="5" 
+                  class="w-full border border-slate-300 rounded-lg p-2.5 font-mono text-xs text-slate-800"
+                  placeholder="Paste your own lesson text here..."
+                  oninput="compileCompleteSequence()"
+                ></textarea>
+              </div>
+              <div class="space-y-1">
+                <label class="block font-bold text-xs text-slate-700">Raw Simulation HTML/JS Code</label>
+                <textarea 
+                  id="embedSimCode" 
+                  rows="5" 
+                  class="w-full border border-slate-300 rounded-lg p-2.5 font-mono text-xs text-slate-800"
+                  placeholder="Or paste code here directly..."
+                  oninput="compileCompleteSequence()"
+                ></textarea>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Compiled Live Preview Canvas with Open in New Tab Button -->
+        <div class="space-y-3 pt-2" id="previewSection">
+          <div class="flex items-center justify-between">
+            <h4 class="text-sm sm:text-base font-bold uppercase tracking-wider text-[#000054] flex items-center gap-2">
+              <span>Live Compiled Sequence Preview</span>
+            </h4>
+            <button 
+              onclick="openPreviewInNewTab()" 
+              id="btnOpenNewTab"
+              class="px-3.5 py-1.5 rounded-lg border border-[#000054]/20 hover:border-[#000054] bg-white hover:bg-blue-50/50 text-[#000054] text-xs sm:text-sm font-bold flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+              title="Open full-sized document in new browser tab"
+            >
+              <svg class="w-4 h-4 text-[#000054]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+              <span>Open in New Tab</span>
+            </button>
+          </div>
+          
+          <div id="previewFrameWrapper" class="rounded-xl border border-slate-300 bg-white overflow-hidden shadow-sm relative transition-all duration-200">
+            <iframe 
+              id="compiledPreviewFrame" 
+              class="w-full h-[620px] bg-white border-0 transition-all duration-300" 
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              title="Compiled Course Sequence with Embedded Simulation"
+            ></iframe>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Wrap-up Return to Why Note -->
+      <div class="p-5 sm:p-6 rounded-xl bg-white border-l-4 border-l-[#FAC800] border border-slate-200 shadow-sm space-y-2">
+        <h4 class="text-sm font-bold uppercase tracking-wider text-[#000054]">
+          Wrap-up: Return to the "Why"
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+          <strong>A simulation with no next step is just a demo, not learning.</strong><br />
+          The simulation only matters if it becomes raw material for something the student does afterward. In our sequence, the hesitation at the vending machine became the direct evidence needed to write measurable engineering specifications.
+        </p>
+      </div>
+
+      <!-- Navigation Footer -->
+      <div class="pt-2 flex justify-between items-center text-xs sm:text-sm font-semibold">
+        <button onclick="switchTab('studio')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
+          &lt; Previous: Phase 3 — AI Prompt Tool
+        </button>
+        <button onclick="switchTab('home')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm">
+          Return to Overview &gt;
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Clean Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-xs text-slate-500 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>Creating Bespoke Learning Activities &bull; Higher Education Horizon 2026</div>
+      <div>RMIT University</div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- REACT COMPONENT: RETRO-MODERN ARCADE VENDING MACHINE                  -->
+  <!-- ===================================================================== -->
+  <script type="text/babel" src="vending-machine.js"></script>
+
+  <!-- ===================================================================== -->
+  <!-- VANILLA JAVASCRIPT: LOGIC & EMBEDDER COMPILER                         -->
+  <!-- ===================================================================== -->
+  <script src="app.js"></script>
+
+</body>
+</html>

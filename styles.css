@@ -1,0 +1,127 @@
+    /* Accessible baseline typography */
+    html, body {
+      font-family: 'Lato', "Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #1E293B;
+      background-color: #F8FAFC;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    *:focus-visible {
+      outline: 2px solid #000054;
+      outline-offset: 2px;
+    }
+
+    /* Glass glare for vending machine */
+    .glass-glare {
+      background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.03) 50%, transparent 50.1%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* LCD scanlines */
+    .scanlines {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.04));
+      background-size: 100% 4px, 6px 100%;
+    }
+
+    /* Backlight glows */
+    .neon-glow-pink { box-shadow: 0 0 12px rgba(236, 72, 153, 0.35), inset 0 0 12px rgba(236, 72, 153, 0.15); }
+    .neon-glow-cyan { box-shadow: 0 0 12px rgba(6, 182, 212, 0.35), inset 0 0 12px rgba(6, 182, 212, 0.15); }
+    .neon-glow-yellow { box-shadow: 0 0 12px rgba(234, 179, 8, 0.35), inset 0 0 12px rgba(234, 179, 8, 0.15); }
+    .neon-glow-white { box-shadow: 0 0 12px rgba(255, 255, 255, 0.2), inset 0 0 12px rgba(255, 255, 255, 0.1); }
+
+    /* Coil Rotation */
+    @keyframes rotateCoil {
+      0% { transform: scaleX(1) rotate(0deg); }
+      100% { transform: scaleX(1) rotate(360deg); }
+    }
+    .animate-coil {
+      animation: rotateCoil 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes pulseLed {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; filter: brightness(1.2); }
+    }
+    .animate-led-pulse {
+      animation: pulseLed 2s infinite ease-in-out;
+    }
+
+    /* Requirements Table Styling */
+    .req-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .req-table tr td, .req-table tr th {
+      padding: 12px 16px;
+      border: 1px solid #E2E8F0;
+      vertical-align: middle;
+      text-align: left;
+      font-size: 15px;
+    }
+    .req-table tr { background-color: #FFFFFF; }
+    .req-table th.header-req {
+      background-color: #F1F5F9;
+      color: #000054;
+      font-weight: bold;
+      width: 44%;
+    }
+    .req-table th.header-measurable {
+      background-color: #FAC800;
+      color: #000054;
+      font-weight: bold;
+      text-align: center;
+      width: 20%;
+    }
+    .req-table th.header-why {
+      background-color: #F1F5F9;
+      color: #000054;
+      font-weight: bold;
+      width: 36%;
+    }
+    .req-select {
+      padding: 7px 10px;
+      width: 100%;
+      border: 1px solid #CBD5E1;
+      background-color: #FFFFFF;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .dropdown-container {
+      display: flex;
+      align-items: center;
+    }
+    .feedback-icon {
+      margin-left: 8px;
+      font-size: 16px;
+      visibility: hidden;
+      width: 18px;
+      font-weight: bold;
+    }
+    .req-row-correct .req-select {
+      background-color: #DCFCE7;
+      border-color: #16A34A;
+      color: #15803D;
+    }
+    .req-row-correct .feedback-icon {
+      visibility: visible;
+      color: #16A34A;
+    }
+    .req-row-incorrect .req-select {
+      background-color: #FEE2E2;
+      border-color: #DC2626;
+      color: #B91C1C;
+    }
+    .req-row-incorrect .feedback-icon {
+      visibility: visible;
+      color: #DC2626;
+    }
+    .feedback-cell {
+      font-size: 14px;
+      line-height: 1.4;
+      color: #334155;
+    }

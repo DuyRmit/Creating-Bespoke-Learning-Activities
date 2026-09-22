@@ -15,44 +15,406 @@
 
   <!-- Fonts: Lato for clean institutional typography, Orbitron & JetBrains Mono for LCD/Keypad -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@600;800;900&family=Lato:wght@400;600;700;900&display=swap" rel="stylesheet">
 
   <script src="tailwind-config.js"></script>
 
+  <style>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
+  <!-- Top Global Header -->
   <header class="bg-white border-b-2 border-b-[#E60028] sticky top-0 z-50 shadow-sm">
-    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
       
       <!-- Brand & Title -->
-      <div class="cursor-pointer" onclick="switchTab('home')">
-        <span class="text-xs font-bold tracking-wider uppercase text-[#000054]">Higher Education Horizon 2026</span>
-        <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">
-          Creating Bespoke Learning Activities
-        </h1>
+      <div class="cursor-pointer flex items-center gap-3" onclick="navigateTo('home')">
+        <div class="w-2.5 h-8 bg-[#E60028] rounded-full hidden sm:block"></div>
+        <div>
+          <span class="text-xs font-bold tracking-wider uppercase text-[#000054] block">Higher Education Horizon 2026</span>
+          <h1 class="text-sm sm:text-base md:text-lg font-bold text-slate-900 leading-tight">
+            Creating Bespoke Learning Activities
+          </h1>
+        </div>
       </div>
 
-      <!-- Navigation Bar -->
-      <nav aria-label="Workshop Phases" class="flex items-center space-x-1 sm:space-x-2 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs sm:text-sm">
-        <button onclick="switchTab('home')" id="tabBtnHome" class="px-3 sm:px-3.5 py-1.5 rounded-md font-bold text-white bg-[#000054] transition shadow-sm">
-          Overview
-        </button>
-        <button onclick="switchTab('sequence')" id="tabBtnSequence" class="px-3 sm:px-3.5 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition">
-          Phase 1: Experience
-        </button>
-        <button onclick="switchTab('challenge')" id="tabBtnChallenge" class="px-3 sm:px-3.5 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition">
-          Phase 2: Challenge
-        </button>
-        <button onclick="switchTab('studio')" id="tabBtnStudio" class="px-3 sm:px-3.5 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition">
-          Phase 3: Prompt Tool
-        </button>
-        <button onclick="switchTab('showcase')" id="tabBtnShowcase" class="px-3 sm:px-3.5 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition">
-          Phase 4: Showcase &amp; Embed
-        </button>
-      </nav>
+      <!-- Navigation & Mode Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Navigation Bar -->
+        <nav aria-label="Workshop Phases" class="flex items-center space-x-1 sm:space-x-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs sm:text-sm">
+          <button onclick="navigateTo('home')" id="tabBtnHome" class="px-3 py-1.5 rounded-md font-bold text-white bg-[#000054] transition shadow-sm">
+            Overview
+          </button>
+          
+          <button onclick="navigateTo('sequence')" id="tabBtnSequence" class="px-2.5 sm:px-3 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition flex items-center gap-1.5">
+            <span>Phase 1</span>
+            <span id="navBadgeSequence" class="text-[10px] px-1.5 py-0.2 rounded font-bold bg-emerald-100 text-emerald-800">Live</span>
+          </button>
+
+          <button onclick="navigateTo('challenge')" id="tabBtnChallenge" class="px-2.5 sm:px-3 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition flex items-center gap-1.5">
+            <span>Phase 2</span>
+            <span id="navBadgeChallenge" class="text-[10px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">🔒</span>
+          </button>
+
+          <button onclick="navigateTo('studio')" id="tabBtnStudio" class="px-2.5 sm:px-3 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition flex items-center gap-1.5">
+            <span>Phase 3</span>
+            <span id="navBadgeStudio" class="text-[10px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">🔒</span>
+          </button>
+
+          <button onclick="navigateTo('showcase')" id="tabBtnShowcase" class="px-2.5 sm:px-3 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition flex items-center gap-1.5">
+            <span>Phase 4</span>
+            <span id="navBadgeShowcase" class="text-[10px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">🔒</span>
+          </button>
+        </nav>
+
+        <!-- Facilitator Mode Switcher Button -->
+        <div class="flex items-center pl-1 sm:pl-2 border-l border-slate-200">
+          <button 
+            id="btnFacilitatorModeToggle"
+            onclick="handleFacilitatorToggleClick()" 
+            class="px-2.5 sm:px-3 py-1.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 shadow-sm bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100"
+            title="Facilitator controls to manually unlock phases"
+          >
+            <span class="w-2 h-2 rounded-full bg-slate-400" id="facilitatorModeDot"></span>
+            <span id="facilitatorModeLabel">Facilitator Mode</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Minimal Facilitator Control Bar -->
+    <div id="facilitatorControlPanel" class="hidden bg-slate-900 border-t border-slate-800 text-white px-4 sm:px-8 py-2.5 text-xs sm:text-sm shadow-md transition-all">
+      <div class="max-w-[1600px] mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
+        
+        <!-- Left: Status & Exit -->
+        <div class="flex items-center gap-3">
+          <span class="px-2 py-0.5 rounded bg-[#FAC800] text-[#000054] font-black uppercase text-[10px] tracking-wider shadow-sm">
+            Facilitator Active
+          </span>
+          <span class="text-slate-300 text-xs hidden sm:inline">
+            Click to publish or lock each phase for audience:
+          </span>
+        </div>
+
+        <!-- Center: Clear Phase Status & Toggle Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:w-auto">
+          <!-- Phase 1 Card -->
+          <div id="panelCardSequence" class="flex items-center justify-between p-1.5 px-3 rounded-lg border border-emerald-500/40 bg-emerald-950/40 gap-2">
+            <div class="flex flex-col">
+              <span class="text-[11px] font-bold text-slate-200">Phase 1</span>
+              <span id="panelStatusSequence" class="text-[10px] font-black uppercase tracking-wider text-emerald-400">PUBLISHED</span>
+            </div>
+            <button 
+              onclick="togglePhasePublish('sequence')" 
+              id="panelBtnSequence"
+              class="px-2 py-1 rounded text-[11px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 transition shadow-sm"
+            >
+              Lock
+            </button>
+          </div>
+
+          <!-- Phase 2 Card -->
+          <div id="panelCardChallenge" class="flex items-center justify-between p-1.5 px-3 rounded-lg border border-slate-700 bg-slate-800/80 gap-2">
+            <div class="flex flex-col">
+              <span class="text-[11px] font-bold text-slate-200">Phase 2</span>
+              <span id="panelStatusChallenge" class="text-[10px] font-black uppercase tracking-wider text-slate-400">LOCKED 🔒</span>
+            </div>
+            <button 
+              onclick="togglePhasePublish('challenge')" 
+              id="panelBtnChallenge"
+              class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
+            >
+              Publish
+            </button>
+          </div>
+
+          <!-- Phase 3 Card -->
+          <div id="panelCardStudio" class="flex items-center justify-between p-1.5 px-3 rounded-lg border border-slate-700 bg-slate-800/80 gap-2">
+            <div class="flex flex-col">
+              <span class="text-[11px] font-bold text-slate-200">Phase 3</span>
+              <span id="panelStatusStudio" class="text-[10px] font-black uppercase tracking-wider text-slate-400">LOCKED 🔒</span>
+            </div>
+            <button 
+              onclick="togglePhasePublish('studio')" 
+              id="panelBtnStudio"
+              class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
+            >
+              Publish
+            </button>
+          </div>
+
+          <!-- Phase 4 Card -->
+          <div id="panelCardShowcase" class="flex items-center justify-between p-1.5 px-3 rounded-lg border border-slate-700 bg-slate-800/80 gap-2">
+            <div class="flex flex-col">
+              <span class="text-[11px] font-bold text-slate-200">Phase 4</span>
+              <span id="panelStatusShowcase" class="text-[10px] font-black uppercase tracking-wider text-slate-400">LOCKED 🔒</span>
+            </div>
+            <button 
+              onclick="togglePhasePublish('showcase')" 
+              id="panelBtnShowcase"
+              class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
+            >
+              Publish
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Fast Actions -->
+        <div class="flex items-center gap-1.5 self-end lg:self-auto">
+          <button 
+            onclick="unlockNextPhase()" 
+            class="px-2.5 py-1.5 bg-[#FAC800] hover:bg-amber-400 text-[#000054] font-extrabold rounded text-xs transition shadow-sm"
+            title="Publish the next chronological phase immediately"
+          >
+            + Publish Next
+          </button>
+          <button 
+            onclick="publishAllPhases(true)" 
+            class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded font-semibold text-xs transition"
+          >
+            All Live
+          </button>
+          <button 
+            onclick="publishAllPhases(false)" 
+            class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 rounded font-semibold text-xs transition"
+            title="Reset to Phase 1 only"
+          >
+            Reset
+          </button>
+          <button 
+            onclick="exitFacilitatorMode()" 
+            class="px-2 py-1.5 bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 rounded text-xs ml-1 border border-slate-700"
+            title="Exit Facilitator Mode"
+          >
+            Exit
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Facilitator Password Prompt Modal -->
+  <div id="facilitatorPasswordModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 animate-scale-in">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-[#FAC800]"></span>
+          <h3 class="font-bold text-lg text-[#000054]">Facilitator Access</h3>
+        </div>
+        <button onclick="closePasswordModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold">✕</button>
+      </div>
+
+      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+        Enter the workshop facilitator passcode to manually release and control phase publication.
+      </p>
+
+      <form onsubmit="handlePasswordSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Passcode</label>
+          <input 
+            type="password" 
+            id="facilitatorPasswordInput" 
+            placeholder="Enter passcode"
+            autocomplete="current-password"
+            class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-900 focus:border-[#000054] focus:ring-1 focus:ring-[#000054]"
+          />
+          <span id="passwordErrorMsg" class="hidden text-xs text-rose-600 font-semibold mt-1.5 block">
+            Incorrect passcode. Please try again.
+          </span>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button 
+            type="button" 
+            onclick="closePasswordModal()" 
+            class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs sm:text-sm font-semibold transition"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            id="btnFacilitatorPasswordSubmit"
+            class="px-4 py-2 rounded-lg bg-[#000054] hover:bg-[#00003c] text-white text-xs sm:text-sm font-bold transition shadow-sm"
+          >
+            Unlock Facilitator Controls
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 pointer-events-none flex flex-col gap-2"></div>
+
+  <!-- Main Container -->
+  <main class="max-w-[1600px] w-full mx-auto px-4 sm:px-8 py-8 flex-1 font-canvas">
+
+    <!-- ===================================================================== -->
+    <!-- UNPUBLISHED / LOCKED PHASE NOTICE SCREEN                              -->
+    <!-- ===================================================================== -->
+    <div id="tabLockedPhase" class="hidden max-w-4xl mx-auto py-10 space-y-6">
+      <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-8 sm:p-12 text-center space-y-6 relative overflow-hidden">
+        
+        <!-- Top RMIT Stripe Decor -->
+        <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#000054] via-[#E60028] to-[#FAC800]"></div>
+
+        <!-- Lock Graphic & Badge -->
+        <div class="flex flex-col items-center justify-center space-y-3 pt-2">
+          <div class="w-20 h-20 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-3xl shadow-sm text-amber-600 animate-pulse">
+            🔒
+          </div>
+          <span id="lockedPhasePill" class="inline-block bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+            Phase Currently Locked
+          </span>
+        </div>
+
+        <!-- Notice Copy -->
+        <div class="space-y-3 max-w-2xl mx-auto">
+          <h2 id="lockedPhaseTitle" class="text-2xl sm:text-3xl font-bold text-[#000054]">
+            Phase 2: The Challenge
+          </h2>
+          
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <p class="text-slate-800 text-base sm:text-lg font-semibold">
+              ⏳ Please wait for this phase to be published.
+            </p>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Your instructor or workshop facilitator will unlock this activity as the session moves to this stage. You can return to the previous phase or review the overview while you wait.
+            </p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <button 
+            onclick="navigateToLatestUnlocked()" 
+            class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] font-bold text-sm shadow-sm transition flex items-center gap-2"
+          >
+            <span>&larr; Go to Current Active Phase</span>
+          </button>
+          
+          <button 
+            onclick="navigateTo('home')" 
+            class="px-4 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm transition"
+          >
+            Back to Overview
+          </button>
+        </div>
+
+        <!-- Facilitator Quick Unlock Action (Visible only when Facilitator Mode is active) -->
+        <div id="facilitatorLockedAction" class="hidden pt-6 border-t border-slate-200 mt-6 text-xs text-slate-600 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <span class="font-medium text-slate-700">Facilitator Control:</span>
+          <button 
+            id="btnPublishThisPhaseNow" 
+            onclick="publishCurrentLockedPhase()" 
+            class="px-4 py-2 rounded-lg bg-[#E60028] hover:bg-[#b80020] text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5"
+          >
+            <span>Publish This Phase to Audience</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- HOMEPAGE: 4-PHASE WORKSHOP OVERVIEW                                  -->
+    <!-- ===================================================================== -->
+    <div id="tabHome" class="space-y-8">
+      
+      <!-- Welcome Intro Banner -->
+      <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">
+            Workshop Toolkit
+          </div>
+          <div id="overviewFacilitatorStatus" class="text-xs text-slate-500 font-medium"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teacher / Dev Mode Facilitator Control Banner (Visible only in Teacher Mode) -->
+    <div id="teacherControlPanel" class="hidden bg-slate-900 border-t border-slate-800 text-white px-4 sm:px-8 py-2.5 text-xs sm:text-sm shadow-inner transition-all">
+      <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-yellow-400 text-slate-950 font-black uppercase text-[10px] tracking-wider">
+            Teacher / Dev Mode Active
+          </span>
+          <span class="text-slate-300 hidden lg:inline">
+            Toggle which phases audience participants can access in real-time.
+          </span>
+        </div>
+
+        <!-- Per-Phase Toggle Buttons -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Phase 1 -->
+          <button 
+            onclick="togglePhasePublish('sequence')" 
+            id="toggleBtnSequence"
+            class="px-2.5 py-1 rounded font-bold text-xs transition border flex items-center gap-1.5 bg-emerald-900/60 border-emerald-500 text-emerald-300"
+          >
+            <span>Phase 1:</span>
+            <span id="toggleTextSequence">Published ✓</span>
+          </button>
+
+          <!-- Phase 2 -->
+          <button 
+            onclick="togglePhasePublish('challenge')" 
+            id="toggleBtnChallenge"
+            class="px-2.5 py-1 rounded font-bold text-xs transition border flex items-center gap-1.5 bg-slate-800 border-slate-700 text-slate-400 hover:text-white"
+          >
+            <span>Phase 2:</span>
+            <span id="toggleTextChallenge">Locked 🔒</span>
+          </button>
+
+          <!-- Phase 3 -->
+          <button 
+            onclick="togglePhasePublish('studio')" 
+            id="toggleBtnStudio"
+            class="px-2.5 py-1 rounded font-bold text-xs transition border flex items-center gap-1.5 bg-slate-800 border-slate-700 text-slate-400 hover:text-white"
+          >
+            <span>Phase 3:</span>
+            <span id="toggleTextStudio">Locked 🔒</span>
+          </button>
+
+          <!-- Phase 4 -->
+          <button 
+            onclick="togglePhasePublish('showcase')" 
+            id="toggleBtnShowcase"
+            class="px-2.5 py-1 rounded font-bold text-xs transition border flex items-center gap-1.5 bg-slate-800 border-slate-700 text-slate-400 hover:text-white"
+          >
+            <span>Phase 4:</span>
+            <span id="toggleTextShowcase">Locked 🔒</span>
+          </button>
+
+          <!-- Bulk Actions Dropdown / Quick Buttons -->
+          <div class="flex items-center gap-1.5 pl-2 border-l border-slate-700">
+            <button 
+              onclick="unlockNextPhase()" 
+              class="px-2.5 py-1 bg-[#000054] hover:bg-blue-900 border border-blue-400 text-blue-200 rounded font-bold text-xs transition shadow-sm"
+              title="Unlock the next chronological phase"
+            >
+              + Unlock Next
+            </button>
+            <button 
+              onclick="publishAllPhases(true)" 
+              class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 font-medium text-xs"
+              title="Publish all phases immediately"
+            >
+              Publish All
+            </button>
+            <button 
+              onclick="publishAllPhases(false)" 
+              class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-rose-300 rounded border border-slate-700 font-medium text-xs"
+              title="Reset: Phase 1 only"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -63,14 +425,92 @@
   <main class="max-w-[1600px] w-full mx-auto px-4 sm:px-8 py-8 flex-1 font-canvas">
 
     <!-- ===================================================================== -->
+    <!-- UNPUBLISHED / LOCKED PHASE NOTICE SCREEN                              -->
+    <!-- ===================================================================== -->
+    <div id="tabLockedPhase" class="hidden max-w-4xl mx-auto py-10 space-y-6">
+      <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-8 sm:p-12 text-center space-y-6 relative overflow-hidden">
+        
+        <!-- Top RMIT Stripe Decor -->
+        <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#000054] via-[#E60028] to-[#FAC800]"></div>
+
+        <!-- Lock Graphic & Badge -->
+        <div class="flex flex-col items-center justify-center space-y-3 pt-2">
+          <div class="w-20 h-20 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-3xl shadow-sm text-amber-600 animate-pulse">
+            🔒
+          </div>
+          <span id="lockedPhasePill" class="inline-block bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+            Phase Currently Locked
+          </span>
+        </div>
+
+        <!-- Notice Copy -->
+        <div class="space-y-3 max-w-2xl mx-auto">
+          <h2 id="lockedPhaseTitle" class="text-2xl sm:text-3xl font-bold text-[#000054]">
+            Phase 2: The Challenge
+          </h2>
+          
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <p class="text-slate-800 text-base sm:text-lg font-semibold">
+              ⏳ Please wait for this phase to be published.
+            </p>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Your instructor or workshop facilitator will unlock this activity as the session moves to this stage. You can return to the previous phase or review the overview while you wait.
+            </p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <button 
+            onclick="navigateToLatestUnlocked()" 
+            class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] font-bold text-sm shadow-sm transition flex items-center gap-2"
+          >
+            <span>&larr; Go to Current Active Phase</span>
+          </button>
+          
+          <button 
+            onclick="navigateTo('home')" 
+            class="px-4 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm transition"
+          >
+            Back to Overview
+          </button>
+        </div>
+
+        <!-- Teacher Quick Unlock Trigger (Shown when Teacher mode is active or switchable) -->
+        <div id="teacherLockedHint" class="pt-6 border-t border-slate-200 mt-6 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <span>Are you the instructor facilitating this workshop?</span>
+          <div class="flex items-center gap-2">
+            <button 
+              id="btnPublishThisPhaseNow" 
+              onclick="publishCurrentLockedPhase()" 
+              class="px-3 py-1 rounded bg-[#FAC800] hover:bg-amber-400 text-[#000054] font-bold text-xs transition shadow-sm"
+            >
+              Publish This Phase Now
+            </button>
+            <button 
+              onclick="bypassLockedPhaseAsTeacher()" 
+              class="px-3 py-1 rounded border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs"
+            >
+              Preview as Teacher
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
     <!-- HOMEPAGE: 4-PHASE WORKSHOP OVERVIEW                                  -->
     <!-- ===================================================================== -->
     <div id="tabHome" class="space-y-8">
       
       <!-- Welcome Intro Banner -->
       <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-3">
-        <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">
-          Workshop Toolkit
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">
+            Workshop Toolkit
+          </div>
+          <div id="overviewTeacherStatus" class="text-xs text-slate-500 font-medium"></div>
         </div>
         <h2 class="text-2xl sm:text-3xl font-bold text-[#000054]">
           Creating Bespoke Learning Activities
@@ -84,66 +524,70 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         
         <!-- Phase 1 Card -->
-        <div onclick="switchTab('sequence')" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group">
+        <div onclick="navigateTo('sequence')" id="cardPhaseSequence" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group relative">
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-[#000054] bg-blue-50 px-2.5 py-1 rounded">Phase 1</span>
+              <span id="cardBadgeSequence" class="text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Published</span>
             </div>
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">Experience the Sequence</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
               Experience a complete active learning module from the student's perspective.
             </p>
           </div>
-          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline">
+          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline" id="cardActionSequence">
             Start Phase 1 &rarr;
           </div>
         </div>
 
         <!-- Phase 2 Card -->
-        <div onclick="switchTab('challenge')" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group">
+        <div onclick="navigateTo('challenge')" id="cardPhaseChallenge" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group relative">
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 px-2.5 py-1 rounded">Phase 2</span>
+              <span id="cardBadgeChallenge" class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500">🔒 Locked</span>
             </div>
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">The Challenge: Review Drafts</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
               Review an unfinished course draft with your group, identify learning bottlenecks, and brainstorm active learning ideas.
             </p>
           </div>
-          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline">
-            Start Phase 2 &rarr;
+          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline" id="cardActionChallenge">
+            Enter Phase 2 &rarr;
           </div>
         </div>
 
         <!-- Phase 3 Card -->
-        <div onclick="switchTab('studio')" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group">
+        <div onclick="navigateTo('studio')" id="cardPhaseStudio" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group relative">
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-1 rounded">Phase 3</span>
+              <span id="cardBadgeStudio" class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500">🔒 Locked</span>
             </div>
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">AI Prompt Tool: Build Simulation</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
               Clarify your learning goal and friction moment, generate a prompt, and build your simulation.
             </p>
           </div>
-          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline">
-            Start Phase 3 &rarr;
+          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline" id="cardActionStudio">
+            Enter Phase 3 &rarr;
           </div>
         </div>
 
         <!-- Phase 4 Card -->
-        <div onclick="switchTab('showcase')" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group">
+        <div onclick="navigateTo('showcase')" id="cardPhaseShowcase" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group relative">
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded">Phase 4</span>
+              <span id="cardBadgeShowcase" class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500">🔒 Locked</span>
             </div>
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">Showcase &amp; Embed Simulation</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
               Share your simulation on the Padlet wall and embed it directly into your course sequence.
             </p>
           </div>
-          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline">
-            Start Phase 4 &rarr;
+          <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline" id="cardActionShowcase">
+            Enter Phase 4 &rarr;
           </div>
         </div>
 
@@ -206,7 +650,7 @@
               Before we write the user requirements, we must look at the System Context. Using our vending machine example, think about how it is actually used.
             </p>
 
-            <!-- Yellow Activity Callout Box (Duration removed) -->
+            <!-- Yellow Activity Callout Box -->
             <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
               <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
                 💬
@@ -296,7 +740,7 @@
               </div>
             </div>
 
-            <!-- Canvas Callout Quote: Capturing a user's 'needs' is rarely straightforward -->
+            <!-- Canvas Callout Quote -->
             <div class="my-5 p-5 rounded-xl bg-slate-50 border-l-4 border-[#000054] border border-slate-200 text-slate-800 space-y-2">
               <div class="flex items-center space-x-2 font-bold text-[#000054] text-sm sm:text-base">
                 <svg class="w-4 h-4 text-[#000054]" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" /></svg>
@@ -322,7 +766,6 @@
               For the vending machine system, you might have used it before. Imagine yourself as a user of it.
             </p>
 
-            <!-- Yellow Activity Callout Box (Duration removed) -->
             <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
               <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
                 🔍
@@ -352,7 +795,6 @@
               Finally, let's turn a "wish" into a "requirement". A good requirement must be <strong>Specific, Measurable, and Verifiable</strong>. It is very common to find this challenging when writing user requirements.
             </p>
 
-            <!-- Yellow Activity Callout Box (Duration removed) -->
             <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
               <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
                 ✏️
@@ -373,7 +815,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Row 1 -->
                   <tr id="row-req-1">
                     <td class="font-medium text-slate-800">It should accept many payments.</td>
                     <td>
@@ -389,7 +830,6 @@
                     <td class="feedback-cell" data-feedback="The requirement is too vague. How many exactly?"></td>
                   </tr>
 
-                  <!-- Row 2 -->
                   <tr id="row-req-2">
                     <td class="font-medium text-slate-800">The system shall dispense the selected product within 5 seconds of payment confirmation.</td>
                     <td>
@@ -405,7 +845,6 @@
                     <td class="feedback-cell" data-feedback="We can use a stopwatch to 'verify' 5 seconds. 'Fast' is an opinion."></td>
                   </tr>
 
-                  <!-- Row 3 -->
                   <tr id="row-req-3">
                     <td class="font-medium text-slate-800">The system shall support Cash, Visa, Mastercard, and Momo QR payments.</td>
                     <td>
@@ -421,7 +860,6 @@
                     <td class="feedback-cell" data-feedback="We can test each specific payment method."></td>
                   </tr>
 
-                  <!-- Row 4 -->
                   <tr id="row-req-4">
                     <td class="font-medium text-slate-800">The machine should be fast.</td>
                     <td>
@@ -437,7 +875,6 @@
                     <td class="feedback-cell" data-feedback="The requirement is too vague. How can we know what counts as fast?"></td>
                   </tr>
 
-                  <!-- Row 5 -->
                   <tr id="row-req-5">
                     <td class="font-medium text-slate-800">The system shall maintain internal storage temperature between 2°C and 5°C.</td>
                     <td>
@@ -453,7 +890,6 @@
                     <td class="feedback-cell" data-feedback="We can measure the temperature with a sensor."></td>
                   </tr>
 
-                  <!-- Row 6 -->
                   <tr id="row-req-6">
                     <td class="font-medium text-slate-800">The drinks should be cold.</td>
                     <td>
@@ -482,7 +918,6 @@
               </button>
             </div>
 
-            <!-- Wrap-Up Paragraph (Australian English: practise) -->
             <div class="pt-4">
               <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">
                 Good work! In class, we will collaborate on a client brief to practise identifying user needs for a complex engineering project. You will write the user requirements, which is a core part of your upcoming assessment.
@@ -491,10 +926,10 @@
 
             <!-- Clear Navigation Footer -->
             <div class="pt-6 flex items-center justify-between text-xs sm:text-sm font-semibold text-[#000054]">
-              <button onclick="switchTab('home')" class="px-4 py-2 rounded border border-slate-300 hover:bg-slate-100 flex items-center gap-1">
+              <button onclick="navigateTo('home')" class="px-4 py-2 rounded border border-slate-300 hover:bg-slate-100 flex items-center gap-1">
                 <span>&lt;</span> Previous: Overview
               </button>
-              <button onclick="switchTab('challenge')" class="px-5 py-2.5 rounded bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1.5 shadow-sm">
+              <button onclick="navigateTo('challenge')" class="px-5 py-2.5 rounded bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1.5 shadow-sm">
                 <span>Next: Phase 2 — The Challenge</span> <span>&gt;</span>
               </button>
             </div>
@@ -536,9 +971,8 @@
           <span class="text-xs text-slate-500 font-medium">You can also choose your own expertise topic</span>
         </div>
 
-        <!-- 3 Distinguished Topic Cards with distinct visual identities -->
+        <!-- 3 Distinguished Topic Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          
           <!-- Option 1: Indigo / Design -->
           <button 
             onclick="selectChallengeOption(1)" 
@@ -593,10 +1027,9 @@
           <span>Step 2: Read through the sequence</span>
         </h3>
 
-        <!-- Course Sequence Container with Minimal Page Banner -->
+        <!-- Course Sequence Container -->
         <div class="canvas-card rounded-xl border border-slate-300 shadow-sm bg-white overflow-hidden">
           
-          <!-- Distinct Course Sequence Banner (Removed 'Needs Active Learning Spark' badge) -->
           <div class="bg-gradient-to-r from-[#000054] via-[#00006e] to-[#0d1852] px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-4 border-[#FAC800]">
             <div>
               <div class="inline-flex items-center gap-2 mb-1">
@@ -613,7 +1046,7 @@
             </div>
           </div>
 
-          <!-- DRAFT OPTION 1 CONTENT (Australian English applied) -->
+          <!-- DRAFT OPTION 1 CONTENT -->
           <div id="contentChallengeOpt1" class="p-6 sm:p-8 space-y-5 text-slate-800">
             <div>
               <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
@@ -662,7 +1095,7 @@
             </div>
           </div>
 
-          <!-- DRAFT OPTION 2 CONTENT (Australian English applied) -->
+          <!-- DRAFT OPTION 2 CONTENT -->
           <div id="contentChallengeOpt2" class="hidden p-6 sm:p-8 space-y-5 text-slate-800">
             <div>
               <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
@@ -711,7 +1144,7 @@
             </div>
           </div>
 
-          <!-- DRAFT OPTION 3 CONTENT (Australian English applied) -->
+          <!-- DRAFT OPTION 3 CONTENT -->
           <div id="contentChallengeOpt3" class="hidden p-6 sm:p-8 space-y-5 text-slate-800">
             <div>
               <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
@@ -783,7 +1216,7 @@
           </button>
         </div>
 
-        <!-- Bloom's Taxonomy & Measurable Verbs Guidance Box -->
+        <!-- Guidance Box -->
         <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-200 text-slate-800 text-xs sm:text-sm space-y-2">
           <div class="flex items-center gap-2 font-bold text-[#000054]">
             <span class="text-base">🎯</span>
@@ -804,7 +1237,7 @@
           </div>
         </div>
 
-        <!-- Streamlined Sticky Note Input Bar -->
+        <!-- Sticky Note Input Bar -->
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
             <div class="sm:col-span-3">
@@ -845,10 +1278,10 @@
 
       <!-- Clear Navigation Footer -->
       <div class="pt-4 flex justify-between items-center text-xs sm:text-sm font-semibold">
-        <button onclick="switchTab('sequence')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1">
+        <button onclick="navigateTo('sequence')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1">
           <span>&lt;</span> Previous: Phase 1 — Experience
         </button>
-        <button onclick="switchTab('studio')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1 shadow-sm">
+        <button onclick="navigateTo('studio')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1 shadow-sm">
           <span>Next: Phase 3 — AI Prompt Tool</span> <span>&gt;</span>
         </button>
       </div>
@@ -882,9 +1315,7 @@
           <span>Step 1: Clarify pedagogical simulation inputs</span>
         </h3>
 
-        <!-- Reordered Q1 -> Q4 Grid (Australian English applied) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          
           <!-- Q1: Learning Goal & Cognitive Friction -->
           <div class="space-y-1.5">
             <label class="block text-sm font-bold text-slate-800">
@@ -952,7 +1383,6 @@
               What do students do with their observation to bridge to the assessment?
             </span>
           </div>
-
         </div>
       </div>
 
@@ -980,7 +1410,6 @@
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm text-slate-700">
-          
           <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
             <div class="font-bold text-[#000054] flex items-center gap-2">
               <span class="w-5 h-5 rounded-full bg-blue-100 text-[#000054] flex items-center justify-center text-xs font-black">a</span>
@@ -1010,10 +1439,8 @@
               Click <strong>Preview</strong> in Gemini Canvas to interact with your simulation. Ask Gemini to tweak button labels, add audio, or intensify the friction moment.
             </p>
           </div>
-
         </div>
 
-        <!-- Account & Token Limit Advisory Callout -->
         <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 flex items-start gap-2.5 text-xs sm:text-sm text-slate-800">
           <span class="text-base text-amber-700 font-bold flex-shrink-0">💡</span>
           <div class="leading-relaxed">
@@ -1025,10 +1452,10 @@
 
       <!-- Clear Navigation Footer -->
       <div class="pt-4 flex justify-between items-center text-xs sm:text-sm font-semibold">
-        <button onclick="switchTab('challenge')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
+        <button onclick="navigateTo('challenge')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
           &lt; Previous: Phase 2 — The Challenge
         </button>
-        <button onclick="switchTab('showcase')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm">
+        <button onclick="navigateTo('showcase')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm">
           Next: Phase 4 — Showcase &amp; Embed &gt;
         </button>
       </div>
@@ -1092,10 +1519,7 @@
           </p>
         </div>
 
-        <!-- Top Row: Step 1 & Step 2 in 2-Column Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          
-          <!-- Control 1: Sequence Option -->
           <div class="space-y-1.5">
             <label class="block text-sm font-bold text-slate-800">
               1. Choose Course Sequence
@@ -1113,7 +1537,6 @@
             <span class="text-xs text-slate-500 block">Select which reading draft to embed into.</span>
           </div>
 
-          <!-- Control 2: Placement Position -->
           <div class="space-y-1.5">
             <label class="block text-sm font-bold text-slate-800">
               2. Place Simulation Inside
@@ -1129,13 +1552,9 @@
             </select>
             <span class="text-xs text-slate-500 block">Determines where the friction trigger appears.</span>
           </div>
-
         </div>
 
-        <!-- Bottom Row: Step 3 on Left, Compile Button Aligned on Right -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-end pt-1">
-          
-          <!-- Control 3: Drag & Drop / Upload HTML -->
           <div class="lg:col-span-8 space-y-1.5">
             <label class="block text-sm font-bold text-slate-800">
               3. Simulation HTML File or Code
@@ -1155,7 +1574,6 @@
             </div>
           </div>
 
-          <!-- Compile Preview Button on the Right -->
           <div class="lg:col-span-4 flex flex-col justify-end">
             <button 
               onclick="compileCompleteSequence()" 
@@ -1167,10 +1585,8 @@
               <span class="text-xs font-normal text-white/90">Assemble simulation into reading sequence</span>
             </button>
           </div>
-
         </div>
 
-        <!-- Collapsible Raw Code / Custom Text Editor -->
         <div class="pt-1">
           <details class="text-xs sm:text-sm text-slate-700 group">
             <summary class="cursor-pointer font-bold text-[#000054] hover:underline list-none flex items-center gap-1">
@@ -1202,7 +1618,6 @@
           </details>
         </div>
 
-        <!-- Compiled Live Preview Canvas with Open in New Tab Button -->
         <div class="space-y-3 pt-2" id="previewSection">
           <div class="flex items-center justify-between">
             <h4 class="text-sm sm:text-base font-bold uppercase tracking-wider text-[#000054] flex items-center gap-2">
@@ -1244,10 +1659,10 @@
 
       <!-- Navigation Footer -->
       <div class="pt-2 flex justify-between items-center text-xs sm:text-sm font-semibold">
-        <button onclick="switchTab('studio')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
+        <button onclick="navigateTo('studio')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
           &lt; Previous: Phase 3 — AI Prompt Tool
         </button>
-        <button onclick="switchTab('home')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm">
+        <button onclick="navigateTo('home')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm">
           Return to Overview &gt;
         </button>
       </div>
@@ -1270,7 +1685,7 @@
   <script type="text/babel" src="vending-machine.js"></script>
 
   <!-- ===================================================================== -->
-  <!-- VANILLA JAVASCRIPT: LOGIC & EMBEDDER COMPILER                         -->
+  <!-- JAVASCRIPT: TEACHER / DEV MODE & PUBLISHING SYSTEM                    -->
   <!-- ===================================================================== -->
   <script src="app.js"></script>
 

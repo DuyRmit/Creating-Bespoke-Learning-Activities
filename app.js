@@ -1,12 +1,422 @@
-    // Tab Controller for 5 Views: Home, Sequence, Challenge, Studio, Showcase
-    function switchTab(tabId) {
+/* Phase Metadata Definitions */
+    const phaseConfig = {
+      sequence: {
+        id: 'sequence',
+        phaseNumber: 1,
+        title: "Phase 1: Experience the Sequence",
+        defaultPublished: true,
+      },
+      challenge: {
+        id: 'challenge',
+        phaseNumber: 2,
+        title: "Phase 2: The Challenge (Review Drafts)",
+        defaultPublished: false,
+      },
+      studio: {
+        id: 'studio',
+        phaseNumber: 3,
+        title: "Phase 3: AI Prompt Tool (Build Simulation)",
+        defaultPublished: false,
+      },
+      showcase: {
+        id: 'showcase',
+        phaseNumber: 4,
+        title: "Phase 4: Showcase & Embed Simulation",
+        defaultPublished: false,
+      }
+    };
+
+    /* ===================================================================
+       SHARED STATE (Cloudflare Worker + KV)
+       All participants read the same published-phase state from this API.
+       Facilitator actions write to it (passcode checked server-side).
+       Fill in your deployed Worker URL below after `wrangler deploy`.
+       =================================================================== */
+    const API_BASE_URL = 'https://REPLACE-WITH-YOUR-WORKER.workers.dev'; // <-- PUT YOUR WORKER URL HERE
+    const STATE_POLL_INTERVAL_MS = 8000; // how often audience devices re-check the live state
+
+    /* State Initialization */
+    let isFacilitatorMode = false;
+    let facilitatorPasscode = null; // kept in memory only for this tab/session, never persisted
+    let publishedPhases = {
+      sequence: true,
+      challenge: false,
+      studio: false,
+      showcase: false
+    };
+    let currentActiveTab = 'home';
+    let attemptedLockedTab = null;
+    let statePollTimer = null;
+
+    // Facilitator Mode itself (not the publish state) is still remembered per-browser,
+    // purely as a UI convenience so the facilitator doesn't have to keep re-entering the
+    // passcode on every reload of their own device. It does NOT grant access by itself -
+    // every write still needs the passcode, verified by the Worker.
+    try {
+      const savedFacilitator = sessionStorage.getItem('rmit_facilitator_mode');
+      const savedPasscode = sessionStorage.getItem('rmit_facilitator_passcode');
+      if (savedFacilitator === 'true' && savedPasscode) {
+        isFacilitatorMode = true;
+        facilitatorPasscode = savedPasscode;
+      }
+    } catch(e) {}
+
+    function saveFacilitatorSession() {
+      try {
+        sessionStorage.setItem('rmit_facilitator_mode', isFacilitatorMode);
+        if (facilitatorPasscode) {
+          sessionStorage.setItem('rmit_facilitator_passcode', facilitatorPasscode);
+        } else {
+          sessionStorage.removeItem('rmit_facilitator_passcode');
+        }
+      } catch(e) {}
+    }
+
+    /* Fetch the live shared state from the Worker and refresh the UI */
+    async function fetchSharedState({ silent } = {}) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/state`, { cache: 'no-store' });
+        if (!res.ok) throw new Error('bad response');
+        const data = await res.json();
+        publishedPhases = {
+          sequence: !!data.sequence,
+          challenge: !!data.challenge,
+          studio: !!data.studio,
+          showcase: !!data.showcase,
+        };
+        updatePhaseBadgesUI();
+
+        // If audience is stuck on a locked screen and it just got published, jump in
+        if (currentActiveTab === 'lockedPhase' && attemptedLockedTab && publishedPhases[attemptedLockedTab]) {
+          actualSwitchTab(attemptedLockedTab);
+        }
+      } catch (err) {
+        if (!silent) showToast('Không thể kết nối máy chủ trạng thái — đang dùng dữ liệu gần nhất.');
+      }
+    }
+
+    /* Push a new publish state to the Worker (facilitator only, passcode required) */
+    async function pushSharedState(nextPublishedPhases) {
+      if (!facilitatorPasscode) {
+        showToast('Bạn cần bật Facilitator Mode trước.');
+        return false;
+      }
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/state`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode: facilitatorPasscode, publishedPhases: nextPublishedPhases }),
+        });
+        if (res.status === 401) {
+          showToast('Mật khẩu Facilitator không đúng hoặc đã hết hạn — vui lòng đăng nhập lại.');
+          exitFacilitatorMode();
+          return false;
+        }
+        if (!res.ok) throw new Error('bad response');
+        const data = await res.json();
+        publishedPhases = {
+          sequence: !!data.sequence,
+          challenge: !!data.challenge,
+          studio: !!data.studio,
+          showcase: !!data.showcase,
+        };
+        updatePhaseBadgesUI();
+        return true;
+      } catch (err) {
+        showToast('Lỗi kết nối — thay đổi chưa được lưu, thử lại nhé.');
+        return false;
+      }
+    }
+
+    function startStatePolling() {
+      if (statePollTimer) clearInterval(statePollTimer);
+      statePollTimer = setInterval(() => fetchSharedState({ silent: true }), STATE_POLL_INTERVAL_MS);
+    }
+
+    /* Facilitator Mode Passcode Modal Controls */
+    function handleFacilitatorToggleClick() {
+      if (isFacilitatorMode) {
+        exitFacilitatorMode();
+      } else {
+        openPasswordModal();
+      }
+    }
+
+    function openPasswordModal() {
+      const modal = document.getElementById('facilitatorPasswordModal');
+      const input = document.getElementById('facilitatorPasswordInput');
+      const err = document.getElementById('passwordErrorMsg');
+      
+      err.classList.add('hidden');
+      input.value = '';
+      modal.classList.remove('hidden');
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closePasswordModal() {
+      document.getElementById('facilitatorPasswordModal').classList.add('hidden');
+    }
+
+    async function handlePasswordSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('facilitatorPasswordInput');
+      const err = document.getElementById('passwordErrorMsg');
+      const submitBtn = document.getElementById('btnFacilitatorPasswordSubmit');
+      const candidate = input.value.trim();
+
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Checking...'; }
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode: candidate }),
+        });
+
+        if (res.ok) {
+          isFacilitatorMode = true;
+          facilitatorPasscode = candidate;
+          saveFacilitatorSession();
+          closePasswordModal();
+          updateFacilitatorModeUI();
+          await fetchSharedState();
+          showToast('Facilitator Mode unlocked! Phase release controls are active.');
+        } else {
+          err.textContent = 'Sai mật khẩu, vui lòng thử lại.';
+          err.classList.remove('hidden');
+          input.select();
+        }
+      } catch (netErr) {
+        err.textContent = 'Không kết nối được máy chủ, kiểm tra lại mạng hoặc thử lại sau.';
+        err.classList.remove('hidden');
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Unlock'; }
+      }
+    }
+
+    function exitFacilitatorMode() {
+      isFacilitatorMode = false;
+      facilitatorPasscode = null;
+      saveFacilitatorSession();
+      updateFacilitatorModeUI();
+      updatePhaseBadgesUI();
+      showToast('Exited Facilitator Mode (Audience View active)');
+
+      // If viewing an unpublished tab, redirect to current active unlocked tab
+      if (currentActiveTab !== 'home' && !publishedPhases[currentActiveTab]) {
+        showLockedPhaseScreen(currentActiveTab);
+      }
+    }
+
+    function updateFacilitatorModeUI() {
+      const btn = document.getElementById('btnFacilitatorModeToggle');
+      const dot = document.getElementById('facilitatorModeDot');
+      const label = document.getElementById('facilitatorModeLabel');
+      const panel = document.getElementById('facilitatorControlPanel');
+      const overviewStatus = document.getElementById('overviewFacilitatorStatus');
+      const lockedAction = document.getElementById('facilitatorLockedAction');
+
+      if (isFacilitatorMode) {
+        btn.className = "px-2.5 sm:px-3 py-1.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 shadow-sm bg-[#FAC800] text-[#000054] border-yellow-500 hover:bg-amber-400";
+        dot.className = "w-2 h-2 rounded-full bg-[#000054] animate-ping";
+        label.textContent = "Facilitator (Exit)";
+        panel.classList.remove('hidden');
+        if (overviewStatus) overviewStatus.innerHTML = `<span class="bg-yellow-100 text-yellow-900 border border-yellow-300 px-2 py-0.5 rounded font-bold">Facilitator Controls Active</span>`;
+        if (lockedAction) lockedAction.classList.remove('hidden');
+      } else {
+        btn.className = "px-2.5 sm:px-3 py-1.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 shadow-sm bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100";
+        dot.className = "w-2 h-2 rounded-full bg-slate-400";
+        label.textContent = "Facilitator Mode";
+        panel.classList.add('hidden');
+        if (overviewStatus) overviewStatus.innerHTML = `<span>Audience View</span>`;
+        if (lockedAction) lockedAction.classList.add('hidden');
+      }
+    }
+
+    /* Toggle single phase publishing status (writes to shared state via Worker) */
+    async function togglePhasePublish(phaseKey) {
+      const next = { ...publishedPhases, [phaseKey]: !publishedPhases[phaseKey] };
+      const ok = await pushSharedState(next);
+      if (!ok) return;
+
+      const phase = phaseConfig[phaseKey];
+      const isPub = publishedPhases[phaseKey];
+      showToast(`${phase.title.split(':')[0]} is now ${isPub ? 'PUBLISHED & AVAILABLE (mọi người tham dự đều thấy)' : 'LOCKED'}`);
+
+      if (currentActiveTab === 'lockedPhase' && attemptedLockedTab === phaseKey && isPub) {
+        actualSwitchTab(phaseKey);
+      }
+    }
+
+    /* Bulk Actions */
+    async function publishAllPhases(publishAll) {
+      const next = {};
+      Object.keys(publishedPhases).forEach(k => {
+        next[k] = publishAll ? true : (k === 'sequence');
+      });
+      const ok = await pushSharedState(next);
+      if (!ok) return;
+      showToast(publishAll ? 'All phases are now LIVE for everyone!' : 'Reset: Only Phase 1 is published.');
+
+      if (currentActiveTab === 'lockedPhase' && attemptedLockedTab && publishedPhases[attemptedLockedTab]) {
+        actualSwitchTab(attemptedLockedTab);
+      }
+    }
+
+    async function unlockNextPhase() {
+      const order = ['sequence', 'challenge', 'studio', 'showcase'];
+      const nextLocked = order.find(k => !publishedPhases[k]);
+      if (nextLocked) {
+        const next = { ...publishedPhases, [nextLocked]: true };
+        const ok = await pushSharedState(next);
+        if (!ok) return;
+        showToast(`Published ${phaseConfig[nextLocked].title.split(':')[0]} for everyone!`);
+        if (currentActiveTab === 'lockedPhase' && attemptedLockedTab === nextLocked) {
+          actualSwitchTab(nextLocked);
+        }
+      } else {
+        showToast('All phases are already published.');
+      }
+    }
+
+    /* UI updates for badges across Nav, Cards, and Facilitator Control Bar */
+    function updatePhaseBadgesUI() {
+      const order = ['sequence', 'challenge', 'studio', 'showcase'];
+
+      order.forEach(k => {
+        const isPub = publishedPhases[k];
+
+        // 1. Navigation Badge
+        const navBadge = document.getElementById(`navBadge${capitalize(k)}`);
+        if (navBadge) {
+          if (isPub) {
+            navBadge.className = "text-[10px] px-1.5 py-0.2 rounded font-bold bg-emerald-100 text-emerald-800";
+            navBadge.textContent = "Live";
+          } else {
+            navBadge.className = "text-[10px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-500";
+            navBadge.textContent = "🔒";
+          }
+        }
+
+        // 2. Overview Card Badge & Action text
+        const cardBadge = document.getElementById(`cardBadge${capitalize(k)}`);
+        const cardAction = document.getElementById(`cardAction${capitalize(k)}`);
+        const cardEl = document.getElementById(`cardPhase${capitalize(k)}`);
+
+        if (cardBadge && cardAction && cardEl) {
+          if (isPub) {
+            cardBadge.className = "text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800";
+            cardBadge.textContent = "Published";
+            cardAction.innerHTML = `Start ${phaseConfig[k].title.split(':')[0]} &rarr;`;
+            cardAction.className = "pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline";
+            cardEl.classList.remove('opacity-75');
+          } else {
+            cardBadge.className = "text-xs font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200";
+            cardBadge.textContent = "🔒 Locked";
+            cardAction.innerHTML = `<span class="text-amber-800 flex items-center gap-1 font-semibold"><span>🔒 Locked</span> <span class="text-xs text-slate-400 font-normal">(Click for status)</span></span>`;
+            cardEl.classList.add('opacity-75');
+          }
+        }
+
+        // 3. Facilitator Control Panel Cards (Clean and obvious)
+        const panelCard = document.getElementById(`panelCard${capitalize(k)}`);
+        const panelStatus = document.getElementById(`panelStatus${capitalize(k)}`);
+        const panelBtn = document.getElementById(`panelBtn${capitalize(k)}`);
+
+        if (panelCard && panelStatus && panelBtn) {
+          if (isPub) {
+            panelCard.className = "flex items-center justify-between p-1.5 px-3 rounded-lg border border-emerald-500/50 bg-emerald-950/40 gap-2";
+            panelStatus.className = "text-[10px] font-black uppercase tracking-wider text-emerald-400";
+            panelStatus.textContent = "PUBLISHED ✓";
+            panelBtn.className = "px-2 py-1 rounded text-[11px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 transition shadow-sm";
+            panelBtn.textContent = "Lock";
+          } else {
+            panelCard.className = "flex items-center justify-between p-1.5 px-3 rounded-lg border border-slate-700 bg-slate-800/80 gap-2";
+            panelStatus.className = "text-[10px] font-black uppercase tracking-wider text-slate-400";
+            panelStatus.textContent = "LOCKED 🔒";
+            panelBtn.className = "px-2.5 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm";
+            panelBtn.textContent = "Publish";
+          }
+        }
+      });
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    /* Guarded Navigation */
+    function navigateTo(tabId) {
+      if (tabId === 'home') {
+        actualSwitchTab('home');
+        return;
+      }
+
+      // Check if phase is published
+      const isPub = publishedPhases[tabId];
+
+      if (!isPub) {
+        // Audience / Locked: show clear locked notice screen
+        showLockedPhaseScreen(tabId);
+        return;
+      }
+
+      actualSwitchTab(tabId);
+    }
+
+    /* Display Locked Phase Screen */
+    function showLockedPhaseScreen(phaseKey) {
+      attemptedLockedTab = phaseKey;
+      const phase = phaseConfig[phaseKey];
+
+      document.getElementById('lockedPhaseTitle').textContent = phase.title;
+      document.getElementById('lockedPhasePill').textContent = `Phase ${phase.phaseNumber} • Unpublished`;
+
+      const publishBtn = document.getElementById('btnPublishThisPhaseNow');
+      if (publishBtn) {
+        publishBtn.textContent = `Publish ${phase.title.split(':')[0]} to Audience Now`;
+      }
+
+      const lockedAction = document.getElementById('facilitatorLockedAction');
+      if (lockedAction) {
+        if (isFacilitatorMode) {
+          lockedAction.classList.remove('hidden');
+        } else {
+          lockedAction.classList.add('hidden');
+        }
+      }
+
+      actualSwitchTab('lockedPhase');
+    }
+
+    async function publishCurrentLockedPhase() {
+      if (!attemptedLockedTab) return;
+      const next = { ...publishedPhases, [attemptedLockedTab]: true };
+      const ok = await pushSharedState(next);
+      if (!ok) return;
+      showToast(`Published ${phaseConfig[attemptedLockedTab].title.split(':')[0]} for everyone! Entering now...`);
+      actualSwitchTab(attemptedLockedTab);
+    }
+
+    function navigateToLatestUnlocked() {
+      const order = ['showcase', 'studio', 'challenge', 'sequence'];
+      const latest = order.find(k => publishedPhases[k]) || 'sequence';
+      actualSwitchTab(latest);
+    }
+
+    /* Core Tab Switching Logic */
+    function actualSwitchTab(tabId) {
+      currentActiveTab = tabId;
+
       const tabs = {
         home: document.getElementById('tabHome'),
         sequence: document.getElementById('tabSequence'),
         challenge: document.getElementById('tabChallenge'),
         studio: document.getElementById('tabStudio'),
         showcase: document.getElementById('tabShowcase'),
+        lockedPhase: document.getElementById('tabLockedPhase')
       };
+
       const btns = {
         home: document.getElementById('tabBtnHome'),
         sequence: document.getElementById('tabBtnSequence'),
@@ -16,13 +426,20 @@
       };
 
       Object.keys(tabs).forEach(k => {
-        if (!tabs[k] || !btns[k]) return;
+        if (!tabs[k]) return;
         if (k === tabId) {
           tabs[k].classList.remove('hidden');
-          btns[k].className = "px-2.5 sm:px-3 py-1.5 rounded-md font-bold text-white bg-[#000054] transition shadow-sm";
         } else {
           tabs[k].classList.add('hidden');
-          btns[k].className = "px-2.5 sm:px-3 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition";
+        }
+      });
+
+      Object.keys(btns).forEach(k => {
+        if (!btns[k]) return;
+        if (k === tabId) {
+          btns[k].className = "px-2.5 sm:px-3 py-1.5 rounded-md font-bold text-white bg-[#000054] transition shadow-sm flex items-center gap-1.5";
+        } else {
+          btns[k].className = "px-2.5 sm:px-3 py-1.5 rounded-md font-medium text-slate-700 hover:text-[#000054] hover:bg-slate-200 transition flex items-center gap-1.5";
         }
       });
 
@@ -152,7 +569,7 @@
       showToast(`Selected ${challengeMeta[optNum].name}`);
     }
 
-    // Streamlined Sticky Notes Storage & Management
+    // Streamlined Sticky Notes
     const defaultStickyNotes = [
       {
         id: 1,
@@ -235,7 +652,7 @@
       document.getElementById('inputSimulationAbout').value = meta.about;
       document.getElementById('inputPostTask').value = meta.postTask;
 
-      switchTab('studio');
+      navigateTo('studio');
       generateCleanPrompt();
       showToast('Transferred note to AI Prompt Tool!');
     }
@@ -249,7 +666,7 @@
       document.getElementById('inputSimulationAbout').value = meta.about;
       document.getElementById('inputPostTask').value = meta.postTask;
 
-      switchTab('studio');
+      navigateTo('studio');
       generateCleanPrompt();
       showToast('Transferred group ideas to AI Prompt Tool!');
     }
@@ -291,7 +708,7 @@
       return div.innerHTML;
     }
 
-    // Measurable Requirements Verification
+    // Requirements Table Handling
     function handleReqChange(selectEl) {
       const selectedValue = selectEl.value;
       const correctAnswer = selectEl.getAttribute('data-correct');
@@ -334,7 +751,7 @@
       showToast('Table reset. Ready to try again.');
     }
 
-    // Prompt Generation (Clean structure, Australian English)
+    // Prompt Generation
     function generateCleanPrompt() {
       const goalFriction = document.getElementById('inputGoalFriction').value.trim() || 
         "Students realise that client wish lists ('make it fast and modern') fail to capture real human constraints. The simulation introduces deliberate cognitive friction that causes students to pause and observe their own hesitation.";
@@ -454,7 +871,6 @@ Generate the complete, working code now.`;
       reader.readAsText(file);
     }
 
-    // Helper to generate the assembled HTML document with strict white background isolation
     function generateCompiledDocument() {
       const optVal = document.getElementById('embedSequenceOption').value;
       const posVal = document.getElementById('embedPlacementPosition').value;
@@ -473,7 +889,7 @@ Generate the complete, working code now.`;
 <body class="bg-white" style="background-color: #ffffff !important;">
   <div style="background-color: #ffffff !important;" class="max-w-xl mx-auto p-8 rounded-xl border-2 border-dashed border-[#000054] text-center space-y-3">
     <div class="inline-block p-3 rounded-full bg-blue-50 text-[#000054] mb-1">
-      <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" /></svg>
+      <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" /></svg>
     </div>
     <h3 class="font-bold text-[#000054] text-lg">Interactive Simulation Trigger</h3>
     <p class="text-slate-600 text-sm">Your bespoke AI-generated simulation will run interactively inside this container with strict white background isolation.</p>
@@ -483,7 +899,6 @@ Generate the complete, working code now.`;
 </html>`;
       }
 
-      // Ensure uploaded simulation code has explicit white background override injected
       let sanitizedSimCode = rawSimCode;
       const whiteBgOverride = `<style>
         html, body { 
@@ -497,7 +912,6 @@ Generate the complete, working code now.`;
       } else if (sanitizedSimCode.toLowerCase().includes('<body')) {
         sanitizedSimCode = whiteBgOverride + sanitizedSimCode;
       } else {
-        // Snippet only: wrap with minimal clean HTML document
         sanitizedSimCode = `<!DOCTYPE html>
 <html>
 <head>
@@ -511,12 +925,10 @@ Generate the complete, working code now.`;
 </html>`;
       }
 
-      // Escape sanitized code to embed safely into srcdoc
       const escapedSrcdoc = sanitizedSimCode
         .replace(/&/g, '&amp;')
         .replace(/"/g, '&quot;');
 
-      // Isolated Sandboxed Frame Container with strict white background
       const simContainer = `
         <div class="my-8 rounded-xl border border-slate-300 bg-white shadow-sm overflow-hidden" style="background-color: #ffffff !important;">
           <div class="bg-slate-100/90 px-4 py-3 border-b border-slate-200 flex items-center justify-between">
@@ -568,7 +980,6 @@ Generate the complete, working code now.`;
         } else if (posVal === 'section3') {
           assembledContent = `${previewSeqHeader}${tmpl.hook}${tmpl.concept}${simContainer}${tmpl.wrapup}`;
         } else {
-          // Default: inside section 2 (core concept)
           assembledContent = `${previewSeqHeader}${tmpl.hook}${tmpl.concept}${simContainer}${tmpl.wrapup}`;
         }
       }
@@ -607,7 +1018,6 @@ Generate the complete, working code now.`;
       iframe.srcdoc = compiledDoc;
     }
 
-    // Opens the complete assembled sequence in an unrestricted new browser tab using a Blob URL
     function openPreviewInNewTab() {
       const compiledDoc = generateCompiledDocument();
       const blob = new Blob([compiledDoc], { type: 'text/html;charset=utf-8' });
@@ -642,8 +1052,8 @@ Generate the complete, working code now.`;
       }, 3000);
     }
 
-    // Initialize State
-    window.addEventListener('DOMContentLoaded', () => {
+    // Initialize State on Page Load
+    window.addEventListener('DOMContentLoaded', async () => {
       document.querySelectorAll('.req-table select').forEach(sel => {
         const saved = localStorage.getItem('rmit_canvas_req_' + sel.id);
         if (saved) {
@@ -651,6 +1061,9 @@ Generate the complete, working code now.`;
           handleReqChange(sel);
         }
       });
+      updateFacilitatorModeUI();
+      await fetchSharedState(); // get the live, shared publish state for every participant
+      startStatePolling();      // keep checking so everyone sees facilitator changes without reloading
       generateCleanPrompt();
       renderStickyNotes();
       compileCompleteSequence();

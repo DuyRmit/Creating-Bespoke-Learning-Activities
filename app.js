@@ -32,7 +32,7 @@
        Facilitator actions write to it (passcode checked server-side).
        Fill in your deployed Worker URL below after `wrangler deploy`.
        =================================================================== */
-    const API_BASE_URL = 'https://REPLACE-WITH-YOUR-WORKER.workers.dev'; // <-- PUT YOUR WORKER URL HERE
+    const API_BASE_URL = 'https://creating-bespoke-learning-activities.duy-doan6.workers.dev'; // <-- PUT YOUR WORKER URL HERE
     const STATE_POLL_INTERVAL_MS = 8000; // how often audience devices re-check the live state
 
     /* State Initialization */

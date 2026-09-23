@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,7 +13,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.20/babel.min.js"></script>
 
-  <!-- Fonts: Lato for clean institutional typography, Orbitron & JetBrains Mono for LCD/Keypad -->
+  <!-- Fonts: Lato for institutional typography, Orbitron & JetBrains Mono for LCD/Keypad -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@600;800;900&family=Lato:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -39,9 +39,8 @@
         </div>
       </div>
 
-      <!-- Navigation & Mode Controls -->
+      <!-- Navigation & Facilitator Mode Controls -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Navigation Bar -->
         <nav aria-label="Workshop Phases" class="flex items-center space-x-1 sm:space-x-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs sm:text-sm">
           <button onclick="navigateTo('home')" id="tabBtnHome" class="px-3 py-1.5 rounded-md font-bold text-white bg-[#000054] transition shadow-sm">
             Overview
@@ -74,7 +73,7 @@
             id="btnFacilitatorModeToggle"
             onclick="handleFacilitatorToggleClick()" 
             class="px-2.5 sm:px-3 py-1.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 shadow-sm bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100"
-            title="Facilitator controls to manually unlock phases"
+            title="Facilitator controls to manually unlock phases (passcode protected)"
           >
             <span class="w-2 h-2 rounded-full bg-slate-400" id="facilitatorModeDot"></span>
             <span id="facilitatorModeLabel">Facilitator Mode</span>
@@ -83,39 +82,38 @@
       </div>
     </div>
 
-    <!-- Minimal Facilitator Control Bar -->
-    <div id="facilitatorControlPanel" class="hidden bg-slate-900 border-t border-slate-800 text-white px-4 sm:px-8 py-2.5 text-xs sm:text-sm shadow-md transition-all">
-      <div class="max-w-[1600px] mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
+    <!-- Minimal, High-Contrast Facilitator Control Panel -->
+    <div id="facilitatorControlPanel" class="hidden bg-slate-900 border-t border-slate-800 text-white px-4 sm:px-8 py-3 text-xs sm:text-sm shadow-md transition-all">
+      <div class="max-w-[1600px] mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         
-        <!-- Left: Status & Exit -->
         <div class="flex items-center gap-3">
-          <span class="px-2 py-0.5 rounded bg-[#FAC800] text-[#000054] font-black uppercase text-[10px] tracking-wider shadow-sm">
-            Facilitator Active
+          <span class="px-2.5 py-1 rounded bg-[#FAC800] text-[#000054] font-black uppercase text-[11px] tracking-wider shadow-sm">
+            Facilitator Mode Active
           </span>
-          <span class="text-slate-300 text-xs hidden sm:inline">
-            Click to publish or lock each phase for audience:
+          <span class="text-slate-300 text-xs hidden md:inline">
+            Publish or lock phases for audience participants in real-time:
           </span>
         </div>
 
-        <!-- Center: Clear Phase Status & Toggle Cards -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:w-auto">
+        <!-- Center: Clear Phase Status & Toggle Actions -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full lg:w-auto">
           <!-- Phase 1 Card -->
-          <div id="panelCardSequence" class="flex items-center justify-between p-1.5 px-3 rounded-lg border border-emerald-500/40 bg-emerald-950/40 gap-2">
+          <div id="panelCardSequence" class="flex items-center justify-between p-2 px-3 rounded-lg border border-emerald-500/50 bg-emerald-950/40 gap-3">
             <div class="flex flex-col">
               <span class="text-[11px] font-bold text-slate-200">Phase 1</span>
-              <span id="panelStatusSequence" class="text-[10px] font-black uppercase tracking-wider text-emerald-400">PUBLISHED</span>
+              <span id="panelStatusSequence" class="text-[10px] font-black uppercase tracking-wider text-emerald-400">PUBLISHED ✓</span>
             </div>
             <button 
               onclick="togglePhasePublish('sequence')" 
               id="panelBtnSequence"
-              class="px-2 py-1 rounded text-[11px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 transition shadow-sm"
+              class="px-2.5 py-1 rounded text-[11px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 transition shadow-sm"
             >
               Lock
             </button>
           </div>
 
           <!-- Phase 2 Card -->
-          <div id="panelCardChallenge" class="flex items-center justify-between p-1.5 px-3 rounded-lg border border-slate-700 bg-slate-800/80 gap-2">
+          <div id="panelCardChallenge" class="flex items-center justify-between p-2 px-3 rounded-lg border border-slate-700 bg-slate-800/90 gap-3">
             <div class="flex flex-col">
               <span class="text-[11px] font-bold text-slate-200">Phase 2</span>
               <span id="panelStatusChallenge" class="text-[10px] font-black uppercase tracking-wider text-slate-400">LOCKED 🔒</span>
@@ -123,14 +121,14 @@
             <button 
               onclick="togglePhasePublish('challenge')" 
               id="panelBtnChallenge"
-              class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
+              class="px-3 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
             >
               Publish
             </button>
           </div>
 
           <!-- Phase 3 Card -->
-          <div id="panelCardStudio" class="flex items-center justify-between p-1.5 px-3 rounded-lg border border-slate-700 bg-slate-800/80 gap-2">
+          <div id="panelCardStudio" class="flex items-center justify-between p-2 px-3 rounded-lg border border-slate-700 bg-slate-800/90 gap-3">
             <div class="flex flex-col">
               <span class="text-[11px] font-bold text-slate-200">Phase 3</span>
               <span id="panelStatusStudio" class="text-[10px] font-black uppercase tracking-wider text-slate-400">LOCKED 🔒</span>
@@ -138,14 +136,14 @@
             <button 
               onclick="togglePhasePublish('studio')" 
               id="panelBtnStudio"
-              class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
+              class="px-3 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
             >
               Publish
             </button>
           </div>
 
           <!-- Phase 4 Card -->
-          <div id="panelCardShowcase" class="flex items-center justify-between p-1.5 px-3 rounded-lg border border-slate-700 bg-slate-800/80 gap-2">
+          <div id="panelCardShowcase" class="flex items-center justify-between p-2 px-3 rounded-lg border border-slate-700 bg-slate-800/90 gap-3">
             <div class="flex flex-col">
               <span class="text-[11px] font-bold text-slate-200">Phase 4</span>
               <span id="panelStatusShowcase" class="text-[10px] font-black uppercase tracking-wider text-slate-400">LOCKED 🔒</span>
@@ -153,38 +151,38 @@
             <button 
               onclick="togglePhasePublish('showcase')" 
               id="panelBtnShowcase"
-              class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
+              class="px-3 py-1 rounded text-[11px] font-bold bg-[#E60028] hover:bg-[#b80020] text-white transition shadow-sm"
             >
               Publish
             </button>
           </div>
         </div>
 
-        <!-- Right: Fast Actions -->
-        <div class="flex items-center gap-1.5 self-end lg:self-auto">
+        <!-- Right: Bulk Quick Controls -->
+        <div class="flex items-center gap-2 self-end lg:self-auto">
           <button 
             onclick="unlockNextPhase()" 
-            class="px-2.5 py-1.5 bg-[#FAC800] hover:bg-amber-400 text-[#000054] font-extrabold rounded text-xs transition shadow-sm"
+            class="px-3 py-1.5 bg-[#FAC800] hover:bg-amber-400 text-[#000054] font-black rounded text-xs transition shadow-sm"
             title="Publish the next chronological phase immediately"
           >
             + Publish Next
           </button>
           <button 
             onclick="publishAllPhases(true)" 
-            class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded font-semibold text-xs transition"
+            class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded font-bold text-xs transition"
           >
             All Live
           </button>
           <button 
             onclick="publishAllPhases(false)" 
-            class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 rounded font-semibold text-xs transition"
+            class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 rounded font-bold text-xs transition"
             title="Reset to Phase 1 only"
           >
             Reset
           </button>
           <button 
             onclick="exitFacilitatorMode()" 
-            class="px-2 py-1.5 bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 rounded text-xs ml-1 border border-slate-700"
+            class="px-2.5 py-1.5 bg-slate-800 hover:bg-rose-950/60 text-slate-300 hover:text-rose-200 rounded text-xs ml-1 border border-slate-700"
             title="Exit Facilitator Mode"
           >
             Exit
@@ -197,7 +195,7 @@
 
   <!-- Facilitator Password Prompt Modal -->
   <div id="facilitatorPasswordModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 animate-scale-in">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-[#FAC800]"></span>
@@ -206,8 +204,8 @@
         <button onclick="closePasswordModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold">✕</button>
       </div>
 
-      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-        Enter the workshop facilitator passcode to manually release and control phase publication.
+      <p class="text-sm text-slate-600 leading-relaxed">
+        Enter the workshop facilitator passcode to manually release and control workshop phases.
       </p>
 
       <form onsubmit="handlePasswordSubmit(event)" class="space-y-3">
@@ -235,10 +233,9 @@
           </button>
           <button 
             type="submit" 
-            id="btnFacilitatorPasswordSubmit"
             class="px-4 py-2 rounded-lg bg-[#000054] hover:bg-[#00003c] text-white text-xs sm:text-sm font-bold transition shadow-sm"
           >
-            Unlock Facilitator Controls
+            Unlock Controls
           </button>
         </div>
       </form>
@@ -251,16 +248,11 @@
   <!-- Main Container -->
   <main class="max-w-[1600px] w-full mx-auto px-4 sm:px-8 py-8 flex-1 font-canvas">
 
-    <!-- ===================================================================== -->
-    <!-- UNPUBLISHED / LOCKED PHASE NOTICE SCREEN                              -->
-    <!-- ===================================================================== -->
+    <!-- UNPUBLISHED / LOCKED PHASE NOTICE SCREEN -->
     <div id="tabLockedPhase" class="hidden max-w-4xl mx-auto py-10 space-y-6">
       <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-8 sm:p-12 text-center space-y-6 relative overflow-hidden">
-        
-        <!-- Top RMIT Stripe Decor -->
         <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#000054] via-[#E60028] to-[#FAC800]"></div>
 
-        <!-- Lock Graphic & Badge -->
         <div class="flex flex-col items-center justify-center space-y-3 pt-2">
           <div class="w-20 h-20 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-3xl shadow-sm text-amber-600 animate-pulse">
             🔒
@@ -270,23 +262,21 @@
           </span>
         </div>
 
-        <!-- Notice Copy -->
         <div class="space-y-3 max-w-2xl mx-auto">
           <h2 id="lockedPhaseTitle" class="text-2xl sm:text-3xl font-bold text-[#000054]">
             Phase 2: The Challenge
           </h2>
           
-          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-            <p class="text-slate-800 text-base sm:text-lg font-semibold">
+          <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <p class="text-slate-800 text-base sm:text-lg font-bold">
               ⏳ Please wait for this phase to be published.
             </p>
             <p class="text-slate-600 text-sm leading-relaxed">
-              Your instructor or workshop facilitator will unlock this activity as the session moves to this stage. You can return to the previous phase or review the overview while you wait.
+              Your workshop facilitator will unlock this activity as the session moves to this stage. You can return to the previous phase or review the overview while you wait.
             </p>
           </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button 
             onclick="navigateToLatestUnlocked()" 
@@ -303,7 +293,6 @@
           </button>
         </div>
 
-        <!-- Facilitator Quick Unlock Action (Visible only when Facilitator Mode is active) -->
         <div id="facilitatorLockedAction" class="hidden pt-6 border-t border-slate-200 mt-6 text-xs text-slate-600 flex flex-col sm:flex-row items-center justify-center gap-3">
           <span class="font-medium text-slate-700">Facilitator Control:</span>
           <button 
@@ -314,16 +303,11 @@
             <span>Publish This Phase to Audience</span>
           </button>
         </div>
-
       </div>
     </div>
 
-    <!-- ===================================================================== -->
-    <!-- HOMEPAGE: 4-PHASE WORKSHOP OVERVIEW                                  -->
-    <!-- ===================================================================== -->
+    <!-- HOMEPAGE: 4-PHASE WORKSHOP OVERVIEW -->
     <div id="tabHome" class="space-y-8">
-      
-      <!-- Welcome Intro Banner -->
       <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-3">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">
@@ -334,14 +318,13 @@
         <h2 class="text-2xl sm:text-3xl font-bold text-[#000054]">
           Creating Bespoke Learning Activities
         </h2>
-        <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-4xl">
+        <p class="text-slate-700 text-base sm:text-lg leading-relaxed max-w-4xl">
           An interactive toolkit to experience active learning sequences, identify friction gaps in course drafts, engineer simulation prompts with AI, and embed finished activities back into your course.
         </p>
       </div>
 
       <!-- 4 Phases Grid Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        
         <!-- Phase 1 Card -->
         <div onclick="navigateTo('sequence')" id="cardPhaseSequence" class="bg-white p-6 rounded-xl border-2 border-slate-200 hover:border-[#000054] hover:shadow-md transition cursor-pointer flex flex-col justify-between space-y-4 group relative">
           <div class="space-y-2">
@@ -351,7 +334,7 @@
             </div>
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">Experience the Sequence</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
-              Experience a complete active learning module from the student's perspective.
+              Experience a complete active learning module from the student perspective.
             </p>
           </div>
           <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline" id="cardActionSequence">
@@ -366,9 +349,9 @@
               <span class="text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 px-2.5 py-1 rounded">Phase 2</span>
               <span id="cardBadgeChallenge" class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500">🔒 Locked</span>
             </div>
-            <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">The Challenge: Review Drafts</h3>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">The Challenge: Colour Theory</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
-              Review an unfinished course draft with your group, identify learning bottlenecks, and brainstorm active learning ideas.
+              Review course drafts on colour theory, identify learning friction points, and craft measurable outcomes.
             </p>
           </div>
           <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline" id="cardActionChallenge">
@@ -385,7 +368,7 @@
             </div>
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">AI Prompt Tool: Build Simulation</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
-              Clarify your learning goal and friction moment, generate a prompt, and build your simulation.
+              Structure your simulation prompt using the 6 core components for a neat, intuitive mechanic.
             </p>
           </div>
           <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline" id="cardActionStudio">
@@ -402,229 +385,229 @@
             </div>
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-[#000054] transition">Showcase &amp; Embed Simulation</h3>
             <p class="text-slate-600 text-sm leading-relaxed">
-              Share your simulation on the Padlet wall and embed it directly into your course sequence.
+              Share your simulation on the Padlet wall and embed it seamlessly into the course sequence.
             </p>
           </div>
           <div class="pt-2 flex items-center text-sm font-bold text-[#000054] group-hover:underline" id="cardActionShowcase">
             Enter Phase 4 &rarr;
           </div>
         </div>
-
       </div>
-
     </div>
 
-    <!-- ===================================================================== -->
-    <!-- PHASE 1: EXPERIENCE THE SEQUENCE                                     -->
-    <!-- ===================================================================== -->
+    <!-- PHASE 1: EXPERIENCE THE SEQUENCE -->
     <div id="tabSequence" class="hidden space-y-6">
-
-      <!-- Consistent Header -->
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded">
-            Phase 1 of 4
-          </div>
-          <h2 class="text-xl sm:text-2xl font-bold text-[#000054] mt-1">
-            Phase 1: Experience the Sequence
-          </h2>
-          <p class="text-slate-600 text-sm mt-0.5">
-            You are a student at RMIT taking the 'Product Design' course for the Engineering program. Experience a pre-class learning module from the student's perspective.
-          </p>
-        </div>
-      </div>
-
-      <!-- Canvas Chrome Mock Container -->
-      <div class="canvas-card rounded-lg overflow-hidden border border-slate-300 shadow-sm bg-white">
-        
-        <!-- Clean Banner Bar -->
+      <div class="canvas-card rounded-xl overflow-hidden border border-slate-300 shadow-sm bg-white">
+        <!-- Banner Bar -->
         <div class="bg-gradient-to-r from-[#000054] via-[#050570] to-[#0d1852] p-6 sm:p-7 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between border-b-4 border-[#E60028]">
           <div class="space-y-1">
             <div class="inline-block bg-[#FAC800] text-[#000054] text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded shadow-sm">
-              Pre-class &gt; 2.1
+              Pre-class learning for Design Thinking course
             </div>
             <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-              Week 2
+              How to Capture User Needs
             </h2>
-            <h3 class="text-lg sm:text-xl font-bold text-slate-100">
-              Understanding User Requirements
-            </h3>
           </div>
         </div>
 
         <!-- Canvas Body Content Area -->
         <div class="p-6 sm:p-10 space-y-8 text-slate-800">
           
-          <!-- SECTION 1: THE CHALLENGES IN CAPTURING USER NEEDS -->
-          <section class="space-y-4">
-            <p class="text-slate-600 text-[15px] leading-relaxed">
-              Now that we know the process of designing and engineering a new product. Let's look at the first step: how we capture the User Needs.
+          <!-- Opening Context -->
+          <div class="p-4 sm:p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#000054] block">Context:</span>
+            <p class="text-slate-700 text-base sm:text-[17px] leading-relaxed">
+              You are a business analyst. The RMIT campus executive just gave you a project on designing the campus vending machine. They said that students want a good, fast, convenient one.
             </p>
+            <p class="text-slate-700 text-base sm:text-[17px] leading-relaxed">
+              So in order for you to communicate to your design and engineering team, you'll need to put yourself into the role of the user and identify what's needed.
+            </p>
+          </div>
 
+          <!-- Section: Capturing User Needs -->
+          <div class="space-y-5">
             <h3 class="text-xl sm:text-2xl font-bold text-[#000054]">
-              The Challenges in Capturing User Needs
+              Capturing User Needs
             </h3>
 
-            <p class="text-slate-700 text-[15px] leading-relaxed">
-              Before we write the user requirements, we must look at the System Context. Using our vending machine example, think about how it is actually used.
-            </p>
-
-            <!-- Yellow Activity Callout Box -->
-            <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
-              <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
-                💬
-              </div>
-              <div>
-                <p class="font-bold text-[#000054]">Consider your reaction after receiving a client brief</p>
-              </div>
-            </div>
-
-            <!-- Poll Scenario Grid -->
-            <div class="pt-2">
-              <h4 class="text-base font-bold text-slate-900 mb-2">Results</h4>
-              
-              <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                
-                <!-- Left: Poll Question & Distinct Options -->
-                <div class="md:col-span-8 space-y-3 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                  <p class="text-slate-800 text-sm leading-relaxed">
-                    <strong>Imagine your team just received this official project brief from a client:</strong><br />
-                    <em class="text-slate-700">"We need a modern, user-friendly snack and drink machine installed in the campus building. It should be fast, reliable, convenient, and look sleek."</em>
-                  </p>
-
-                  <p class="text-slate-900 text-sm font-bold pt-1">
-                    When you receive a brief like this, how do you want to start engineering?
-                  </p>
-
-                  <!-- Poll Options -->
-                  <div class="space-y-2.5 pt-1" id="canvasPollContainer">
-                    
-                    <!-- Option A -->
-                    <div onclick="voteCanvasPoll('A')" class="p-3 rounded-lg border border-slate-200 hover:border-[#000054] hover:bg-slate-50 cursor-pointer transition relative overflow-hidden" id="pollOptA">
-                      <div class="flex justify-between items-center text-xs sm:text-sm font-medium relative z-10">
-                        <span>A. Accept the brief as is and start designing the machine immediately.</span>
-                        <span class="font-bold text-[#000054] ml-2" id="percentA">0%</span>
-                      </div>
-                      <div id="barA" class="absolute top-0 bottom-0 left-0 bg-blue-100 opacity-60 transition-all duration-500" style="width: 0%;"></div>
-                    </div>
-
-                    <!-- Option B -->
-                    <div onclick="voteCanvasPoll('B')" class="p-3 rounded-lg border border-slate-200 hover:border-[#000054] hover:bg-slate-50 cursor-pointer transition relative overflow-hidden" id="pollOptB">
-                      <div class="flex justify-between items-center text-xs sm:text-sm font-medium relative z-10">
-                        <span>B. Carry out a study based on a previous vending machine project to save time.</span>
-                        <span class="font-bold text-[#000054] ml-2" id="percentB">0%</span>
-                      </div>
-                      <div id="barB" class="absolute top-0 bottom-0 left-0 bg-blue-100 opacity-60 transition-all duration-500" style="width: 0%;"></div>
-                    </div>
-
-                    <!-- Option C (Best Practice) -->
-                    <div onclick="voteCanvasPoll('C')" class="p-3 rounded-lg border border-slate-200 hover:border-[#000054] hover:bg-slate-50 cursor-pointer transition relative overflow-hidden" id="pollOptC">
-                      <div class="flex justify-between items-center text-xs sm:text-sm font-medium relative z-10">
-                        <span>C. Ask the client clarifying questions to understand their context, environment, and user base.</span>
-                        <span class="font-bold text-[#000054] ml-2" id="percentC">0%</span>
-                      </div>
-                      <div id="barC" class="absolute top-0 bottom-0 left-0 bg-emerald-100 opacity-60 transition-all duration-500" style="width: 0%;"></div>
-                    </div>
-
-                    <!-- Option D -->
-                    <div onclick="voteCanvasPoll('D')" class="p-3 rounded-lg border border-slate-200 hover:border-[#000054] hover:bg-slate-50 cursor-pointer transition relative overflow-hidden" id="pollOptD">
-                      <div class="flex justify-between items-center text-xs sm:text-sm font-medium relative z-10">
-                        <span>D. Push the brief back to the client and demand a technical specification.</span>
-                        <span class="font-bold text-[#000054] ml-2" id="percentD">0%</span>
-                      </div>
-                      <div id="barD" class="absolute top-0 bottom-0 left-0 bg-blue-100 opacity-60 transition-all duration-500" style="width: 0%;"></div>
-                    </div>
-
-                  </div>
-
-                  <!-- Dynamic Option-Specific Feedback Box -->
-                  <div id="canvasPollFeedback" class="hidden mt-3 p-3.5 rounded-lg border text-xs sm:text-sm"></div>
-                </div>
-
-                <!-- Right: Authentic Context Photo -->
-                <div class="md:col-span-4 flex flex-col items-center">
-                  <div class="w-full rounded-xl overflow-hidden border border-slate-300 shadow-sm bg-slate-100">
-                    <img 
-                      src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=80" 
-                      alt="Student purchasing and collecting a drink from a vending machine on campus"
-                      class="w-full h-64 object-cover object-center"
-                      onerror="this.src='https://placehold.co/400x300/000054/ffffff?text=Vending+Machine+Interaction'"
-                    />
-                  </div>
-                  <span class="text-[11px] text-slate-500 mt-1.5 text-center">
-                    Observing physical posture, reach, payment, and retrieval ergonomics
-                  </span>
-                </div>
-
-              </div>
-            </div>
-
-            <!-- Canvas Callout Quote -->
-            <div class="my-5 p-5 rounded-xl bg-slate-50 border-l-4 border-[#000054] border border-slate-200 text-slate-800 space-y-2">
-              <div class="flex items-center space-x-2 font-bold text-[#000054] text-sm sm:text-base">
-                <svg class="w-4 h-4 text-[#000054]" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" /></svg>
-                <span>Capturing a user's "needs" is rarely straightforward.</span>
-              </div>
-              <p class="text-sm font-semibold text-slate-700">Think of a user requirement as a wish list:</p>
-              <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-700">
-                <li>Users are not professionals who know exactly what they are after.</li>
-                <li>It is unreasonable to expect the user to provide an exact list of requirements or to adhere to it throughout the system's development.</li>
-                <li>The "requirements problem" always stems from the difficulty in identifying, interpreting, and understanding the most fundamental hopes of the user.</li>
-              </ul>
-            </div>
-
-          </section>
-
-          <!-- SECTION 2: HOW TO CAPTURE USER NEEDS & THE SIMULATOR -->
-          <section class="space-y-4 pt-4">
-            <h3 class="text-xl sm:text-2xl font-bold text-[#000054]">
-              How to Capture User Needs
-            </h3>
-            
-            <p class="text-slate-700 text-[15px] leading-relaxed">
-              For the vending machine system, you might have used it before. Imagine yourself as a user of it.
-            </p>
-
-            <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
-              <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
+            <div class="flex items-start gap-3.5 p-4 rounded-xl bg-amber-50/90 border border-amber-200 text-slate-800">
+              <div class="w-8 h-8 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-sm">
                 🔍
               </div>
               <div>
-                <p class="font-bold text-[#000054]">Think about how you interact with the system and what you need from it.</p>
+                <p class="font-bold text-[#000054] text-base">Think about how you interact with the system and what you need from it.</p>
+                <p class="text-slate-700 text-sm sm:text-base mt-1 leading-relaxed">
+                  Consider which buttons the user has to press, how they pay (cash, coin, or make a digital purchase), how they pick up the product, whether they need a straw, what to do if the user needs to call for help/report, and whether to take change.
+                </p>
               </div>
             </div>
 
-            <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-              Consider which buttons the user has to press, how they pay (cash, coin or make a digital purchase), how they pick up the product, whether they need a straw, what to do if the user needs to call for help/report, and whether to take change.
-            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <span class="font-bold text-[#000054] text-base block">1. Test the machine</span>
+                <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
+                  Click through the SmartDrinks simulation below to complete a purchase. Notice how the keypad, screen, payment options, and change tray work in practice.
+                </p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <span class="font-bold text-[#000054] text-base block">2. Identify friction</span>
+                <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
+                  Pay attention to what felt smooth versus what felt confusing or missing while trying to get your item.
+                </p>
+              </div>
+            </div>
+
+            <!-- Testing Scenarios -->
+            <div class="p-4 sm:p-5 rounded-xl bg-blue-50/70 border border-blue-200 space-y-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#000054] flex items-center gap-1.5">
+                <span>🎯 3. Suggested Testing Scenarios</span>
+              </span>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="p-3.5 bg-white rounded-lg border border-blue-200 space-y-1 shadow-sm">
+                  <span class="font-bold text-[#000054] text-sm block">Scenario A: Cash Purchase</span>
+                  <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">Try to buy a Pepsi (A2) using cash banknotes.</p>
+                </div>
+                <div class="p-3.5 bg-white rounded-lg border border-blue-200 space-y-1 shadow-sm">
+                  <span class="font-bold text-[#000054] text-sm block">Scenario B: Instant QR Payment</span>
+                  <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">Select La Vie Water (B1) and pay instantly with the QR scanner.</p>
+                </div>
+                <div class="p-3.5 bg-white rounded-lg border border-blue-200 space-y-1 shadow-sm">
+                  <span class="font-bold text-[#000054] text-sm block">Scenario C: Overpayment &amp; Change</span>
+                  <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">Insert 50,000đ for a 7-Up (A3) and collect your change from the tray.</p>
+                </div>
+              </div>
+            </div>
 
             <!-- Vending Machine Simulator Container -->
-            <div class="my-6 p-3 sm:p-6 bg-slate-900/5 rounded-2xl border border-slate-300 flex justify-center items-center overflow-x-auto">
+            <div class="my-6 p-4 sm:p-6 bg-slate-900/5 rounded-2xl border border-slate-300 flex justify-center items-center overflow-x-auto">
               <div id="vending-machine-root" class="w-full flex justify-center py-2"></div>
             </div>
-          </section>
+          </div>
 
-          <!-- SECTION 3: WRITING MEASURABLE USER REQUIREMENTS -->
-          <section class="space-y-4 pt-4">
+          <!-- Section: Brainstorm Your Wishlist with Collaborative Discussion Box -->
+          <div class="space-y-5">
+            <p class="text-slate-700 text-base sm:text-[17px] leading-relaxed">
+              After experiencing the vending machine, you probably have some ideas on what you want the machine to do based on your simulation experience. Now that you have a brief idea and understanding of the user experience, let's put it into words.
+            </p>
+
+            <div class="flex items-start gap-3.5 p-4 rounded-xl bg-amber-50/90 border border-amber-200 text-slate-800">
+              <div class="w-8 h-8 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-sm">
+                📝
+              </div>
+              <div>
+                <p class="font-bold text-[#000054] text-base">Capture your thoughts:</p>
+                <p class="text-slate-700 text-sm sm:text-base mt-1 leading-relaxed">
+                  Write down a quick, informal wishlist of features or fixes based on what you experienced.
+                </p>
+              </div>
+            </div>
+
+            <!-- Example Wishlist Reference -->
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-600 block">Example Wishlist:</span>
+              <div class="flex flex-wrap gap-2 text-sm text-slate-700">
+                <span class="px-3 py-1 bg-white rounded-full border border-slate-300 font-medium">"I want to be able to pay with card."</span>
+                <span class="px-3 py-1 bg-white rounded-full border border-slate-300 font-medium">"I want the buttons to be bigger."</span>
+                <span class="px-3 py-1 bg-white rounded-full border border-slate-300 font-medium">"I want to return the drinks / cancel an order."</span>
+              </div>
+            </div>
+
+            <!-- Collaborative Discussion Box -->
+            <div class="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="text-base font-bold text-[#000054] flex items-center gap-2">
+                    <span>💬 Wishlist Discussion</span>
+                    <span id="wishlistPostCount" class="text-xs bg-blue-100 text-[#000054] px-2 py-0.5 rounded-full font-bold">0 notes</span>
+                  </h4>
+                  <p class="text-slate-600 text-xs sm:text-sm mt-0.5">
+                    Share your informal wishlist notes with your peers and discuss common friction moments.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Input Form -->
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+                <div class="sm:col-span-4">
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Your Name / Group</label>
+                  <input 
+                    id="wishlistAuthorInput" 
+                    type="text" 
+                    placeholder="e.g. Liam (Group 2)" 
+                    class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-800 focus:border-[#000054] focus:ring-1 focus:ring-[#000054]"
+                  />
+                </div>
+                <div class="sm:col-span-8">
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Your Wishlist Note (Informal wish)</label>
+                  <div class="flex gap-2">
+                    <input 
+                      id="wishlistTextInput" 
+                      type="text" 
+                      placeholder="e.g. I want to be able to cancel an order and get my notes back..." 
+                      class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-800 focus:border-[#000054] focus:ring-1 focus:ring-[#000054]"
+                      onkeydown="if(event.key === 'Enter') addWishlistDiscussionPost();"
+                    />
+                    <button 
+                      onclick="addWishlistDiscussionPost()" 
+                      class="px-4 py-2.5 bg-[#000054] hover:bg-[#00003c] text-white font-bold text-sm rounded-lg transition shadow-sm whitespace-nowrap"
+                    >
+                      Post Note
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Feed of Discussion Posts -->
+              <div id="wishlistDiscussionFeed" class="space-y-2.5 max-h-72 overflow-y-auto pr-1"></div>
+            </div>
+          </div>
+
+          <!-- Section: Writing Measurable User Requirements -->
+          <div class="space-y-5">
             <h3 class="text-xl sm:text-2xl font-bold text-[#000054]">
               Writing Measurable User Requirements
             </h3>
 
-            <p class="text-slate-700 text-[15px] leading-relaxed">
-              Finally, let's turn a "wish" into a "requirement". A good requirement must be <strong>Specific, Measurable, and Verifiable</strong>. It is very common to find this challenging when writing user requirements.
+            <p class="text-slate-700 text-base sm:text-[17px] leading-relaxed">
+              After noting down your observation, you bring those to discuss with your design and engineering team. However, they said that your wishlist is not clear enough. The team can't design if the requirements are not specific, measurable, and verifiable. What does that mean?
             </p>
 
-            <div class="flex items-start gap-3 p-3.5 rounded-lg bg-amber-50/80 border border-amber-200 text-slate-800 text-sm">
-              <div class="w-7 h-7 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <span class="font-bold text-[#000054] text-base block">Specific</span>
+                <p class="text-slate-700 text-sm leading-relaxed">
+                  The requirement details exactly what needs to happen and what the system should do.
+                </p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <span class="font-bold text-[#000054] text-base block">Measurable</span>
+                <p class="text-slate-700 text-sm leading-relaxed">
+                  The requirement includes concrete numbers, limits, or performance metrics.
+                </p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <span class="font-bold text-[#000054] text-base block">Verifiable</span>
+                <p class="text-slate-700 text-sm leading-relaxed">
+                  There must be a clear way to test and confirm the feature works.
+                </p>
+              </div>
+            </div>
+
+            <p class="text-slate-700 text-base sm:text-[17px] leading-relaxed">
+              It is very common to find this challenging when writing user requirements. People often stop at vague wishes instead of actionable criteria.
+            </p>
+
+            <div class="flex items-start gap-3.5 p-4 rounded-xl bg-amber-50/90 border border-amber-200 text-slate-800">
+              <div class="w-8 h-8 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-sm">
                 ✏️
               </div>
               <div>
-                <p class="font-bold text-[#000054]">Test your skills in identifying measurable requirements.</p>
+                <p class="font-bold text-[#000054] text-base">Practise identifying good requirements that are Specific, Measurable, and Verifiable.</p>
               </div>
             </div>
 
             <!-- Measurable Requirements Table -->
-            <div class="overflow-x-auto rounded-lg border border-slate-300 shadow-sm bg-white">
+            <div class="overflow-x-auto rounded-xl border border-slate-300 shadow-sm bg-white">
               <table class="req-table">
                 <thead>
                   <tr>
@@ -727,42 +710,59 @@
               </table>
             </div>
 
-            <!-- Table Buttons -->
-            <div class="flex items-center justify-end gap-3 pt-2">
-              <button onclick="saveReqAnswers()" class="px-4 py-2 bg-[#ccccdd] hover:bg-[#000054] hover:text-white text-[#000054] rounded font-bold text-xs sm:text-sm transition shadow-sm">
+            <div class="flex items-center justify-end gap-3 pt-1">
+              <button onclick="saveReqAnswers()" class="px-4 py-2 bg-[#ccccdd] hover:bg-[#000054] hover:text-white text-[#000054] rounded-lg font-bold text-sm transition shadow-sm">
                 Save Answers
               </button>
-              <button onclick="resetReqAnswers()" class="px-4 py-2 bg-[#fef4cc] hover:bg-[#fac800] text-[#000054] rounded font-bold text-xs sm:text-sm transition shadow-sm">
+              <button onclick="resetReqAnswers()" class="px-4 py-2 bg-[#fef4cc] hover:bg-[#fac800] text-[#000054] rounded-lg font-bold text-sm transition shadow-sm">
                 Start Over
               </button>
             </div>
 
-            <div class="pt-4">
-              <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">
-                Good work! In class, we will collaborate on a client brief to practise identifying user needs for a complex engineering project. You will write the user requirements, which is a core part of your upcoming assessment.
+            <!-- REVISITING YOUR WISHLIST ACTIVITY -->
+            <div class="space-y-4 pt-4">
+              <div class="flex items-start gap-3.5 p-4 rounded-xl bg-amber-50/90 border border-amber-200 text-slate-800">
+                <div class="w-8 h-8 rounded-full bg-[#FAC800] text-[#000054] flex items-center justify-center flex-shrink-0 font-bold shadow-sm text-sm">
+                  🔄
+                </div>
+                <div>
+                  <p class="font-bold text-[#000054] text-base">Revisit your own wishlist</p>
+                  <p class="text-slate-700 text-sm sm:text-base mt-1 leading-relaxed">
+                    Let's revisit your own wishlist in the previous activity. How would you rewrite them into requirements that are Specific, Measurable, and Verifiable?
+                  </p>
+                </div>
+              </div>
+
+              <!-- Container where discussion notes are copied over into editable cards -->
+              <div id="rewriteWishlistContainer" class="space-y-4"></div>
+            </div>
+
+            <!-- Closing Wrap-up -->
+            <div class="pt-4 space-y-1">
+              <p class="text-[#000054] font-bold text-base sm:text-[17px]">
+                Good work!
+              </p>
+              <p class="text-slate-700 text-base sm:text-[17px] leading-relaxed">
+                Hope you have a better understanding how to capture user needs and transform them into Specific, Measurable, and Verifiable requirements.
               </p>
             </div>
 
-            <!-- Clear Navigation Footer -->
-            <div class="pt-6 flex items-center justify-between text-xs sm:text-sm font-semibold text-[#000054]">
-              <button onclick="navigateTo('home')" class="px-4 py-2 rounded border border-slate-300 hover:bg-slate-100 flex items-center gap-1">
+            <!-- Navigation Footer -->
+            <div class="pt-6 flex items-center justify-between text-sm font-semibold text-[#000054]">
+              <button onclick="navigateTo('home')" class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-100 flex items-center gap-1">
                 <span>&lt;</span> Previous: Overview
               </button>
-              <button onclick="navigateTo('challenge')" class="px-5 py-2.5 rounded bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1.5 shadow-sm">
+              <button onclick="navigateTo('challenge')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1.5 shadow-sm font-bold">
                 <span>Next: Phase 2 — The Challenge</span> <span>&gt;</span>
               </button>
             </div>
-
-          </section>
+          </div>
 
         </div>
       </div>
-
     </div>
 
-    <!-- ===================================================================== -->
-    <!-- PHASE 2: THE CHALLENGE (UNFINISHED PASSIVE SEQUENCES)                -->
-    <!-- ===================================================================== -->
+    <!-- PHASE 2: THE CHALLENGE (COLOUR THEORY IN DIGITAL DESIGN) -->
     <div id="tabChallenge" class="hidden space-y-6">
       
       <!-- Phase 2 Header -->
@@ -775,341 +775,210 @@
             Phase 2: The Challenge
           </h2>
           <p class="text-slate-600 text-sm mt-0.5">
-            Review an unfinished passive course draft with your group, identify learning bottlenecks, and brainstorm active learning ideas.
+            Review the Colour Theory draft sequence, test contrast understanding, and outline your simulation concept.
           </p>
         </div>
       </div>
 
-      <!-- STEP 1: CHOOSE THE TOPIC OPTION -->
-      <div class="space-y-3">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">1</span>
-            <span>Step 1: Choose the topic option for your group to design the activities</span>
-          </h3>
-          <span class="text-xs text-slate-500 font-medium">You can also choose your own expertise topic</span>
+      <!-- Course Reading Container -->
+      <div class="canvas-card rounded-xl border border-slate-300 shadow-sm bg-white overflow-hidden">
+        <div class="bg-gradient-to-r from-[#000054] via-[#00006e] to-[#0d1852] px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-4 border-[#FAC800]">
+          <div>
+            <div class="inline-flex items-center gap-2 mb-1">
+              <span class="bg-[#FAC800] text-[#000054] text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-sm">
+                Course Reading Sequence
+              </span>
+              <span class="bg-white/20 text-white text-[11px] font-semibold px-2 py-0.5 rounded">
+                Unfinished Draft
+              </span>
+            </div>
+            <h4 class="text-lg sm:text-xl font-bold tracking-tight text-white">
+              Colour Theory in Digital Design
+            </h4>
+          </div>
         </div>
 
-        <!-- 3 Distinguished Topic Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          <!-- Option 1: Indigo / Design -->
-          <button 
-            onclick="selectChallengeOption(1)" 
-            id="btnChallengeOpt1" 
-            class="p-5 text-left rounded-xl border-2 border-indigo-600 bg-indigo-50/70 text-slate-900 transition flex flex-col justify-between shadow-sm relative overflow-hidden"
-          >
-            <div class="w-1.5 absolute inset-y-0 left-0 bg-indigo-600"></div>
-            <div class="flex items-center justify-between w-full mb-1.5 pl-1">
-              <span class="text-sm font-bold text-indigo-700 uppercase tracking-wider">Option 1</span>
-              <span class="text-sm bg-white px-2.5 py-0.5 rounded border border-indigo-200 text-indigo-800 font-semibold">Design &amp; UI</span>
-            </div>
-            <span class="text-base sm:text-lg font-bold text-slate-900 pl-1">Colour Theory in Digital Design</span>
-            <span class="text-sm text-slate-700 font-medium mt-2 pl-1">Students designing a mobile app palette</span>
-          </button>
-
-          <!-- Option 2: Emerald / Business -->
-          <button 
-            onclick="selectChallengeOption(2)" 
-            id="btnChallengeOpt2" 
-            class="p-5 text-left rounded-xl border-2 border-slate-200 bg-white hover:border-emerald-300 text-slate-700 transition flex flex-col justify-between relative overflow-hidden"
-          >
-            <div class="w-1.5 absolute inset-y-0 left-0 bg-emerald-600 opacity-0 transition-opacity" id="accentBarOpt2"></div>
-            <div class="flex items-center justify-between w-full mb-1.5 pl-1">
-              <span class="text-sm font-bold text-emerald-700 uppercase tracking-wider">Option 2</span>
-              <span class="text-sm bg-white px-2.5 py-0.5 rounded border border-slate-200 text-slate-700 font-semibold">Business &amp; Mgmt</span>
-            </div>
-            <span class="text-base sm:text-lg font-bold text-slate-900 pl-1">Event Budget Planning</span>
-            <span class="text-sm text-slate-700 font-medium mt-2 pl-1">Managing cash flow &amp; contingency buffers</span>
-          </button>
-
-          <!-- Option 3: Amber / Media -->
-          <button 
-            onclick="selectChallengeOption(3)" 
-            id="btnChallengeOpt3" 
-            class="p-5 text-left rounded-xl border-2 border-slate-200 bg-white hover:border-amber-300 text-slate-700 transition flex flex-col justify-between relative overflow-hidden"
-          >
-            <div class="w-1.5 absolute inset-y-0 left-0 bg-amber-500 opacity-0 transition-opacity" id="accentBarOpt3"></div>
-            <div class="flex items-center justify-between w-full mb-1.5 pl-1">
-              <span class="text-sm font-bold text-amber-700 uppercase tracking-wider">Option 3</span>
-              <span class="text-sm bg-white px-2.5 py-0.5 rounded border border-slate-200 text-slate-700 font-semibold">Media &amp; Film</span>
-            </div>
-            <span class="text-base sm:text-lg font-bold text-slate-900 pl-1">Three-Point Studio Lighting</span>
-            <span class="text-sm text-slate-700 font-medium mt-2 pl-1">Crafting visual mood &amp; actor character</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- STEP 2: READ THROUGH THE SEQUENCE -->
-      <div class="space-y-2">
-        <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
-          <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">2</span>
-          <span>Step 2: Read through the sequence</span>
-        </h3>
-
-        <!-- Course Sequence Container -->
-        <div class="canvas-card rounded-xl border border-slate-300 shadow-sm bg-white overflow-hidden">
-          
-          <div class="bg-gradient-to-r from-[#000054] via-[#00006e] to-[#0d1852] px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-4 border-[#FAC800]">
-            <div>
-              <div class="inline-flex items-center gap-2 mb-1">
-                <span class="bg-[#FAC800] text-[#000054] text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-sm">
-                  Course Reading Sequence
-                </span>
-                <span class="bg-white/20 text-white text-[11px] font-semibold px-2 py-0.5 rounded">
-                  Unfinished Draft
-                </span>
-              </div>
-              <h4 class="text-lg sm:text-xl font-bold tracking-tight text-white" id="currentSequenceBanner">
-                Option 1: Colour Theory in Digital Design
-              </h4>
+        <!-- Course Reading Content with 4 Sections -->
+        <div class="p-6 sm:p-8 space-y-6 text-slate-800">
+          <div>
+            <h4 class="text-2xl font-bold text-[#000054]">
+              Colour Theory in Digital Design
+            </h4>
+            <div class="mt-2 p-4 rounded-lg bg-blue-50/70 border border-blue-200 text-slate-800 text-sm sm:text-base leading-relaxed space-y-1">
+              <strong class="text-[#000054] block">Context:</strong>
+              <p>You're working in design teams to create a mobile app for campus students. Before finalising your high-fidelity interface, work through this guide to understand how colour choices directly affect readability and navigation.</p>
+              <p class="text-slate-600">Let's explore how we can evaluate whether a colour combination meets basic contrast standards, and explain why that matters for real users.</p>
             </div>
           </div>
 
-          <!-- DRAFT OPTION 1 CONTENT -->
-          <div id="contentChallengeOpt1" class="p-6 sm:p-8 space-y-5 text-slate-800">
-            <div>
-              <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
-                Colour Theory in Digital Design
-              </h4>
-              <p class="text-slate-600 text-xs sm:text-sm mt-1">
-                Context: You are currently working in design teams to create a mobile app for campus students. Before finalising your high-fidelity user interface, work through this guide to understand how colour choices directly impact user experience and navigation.
-              </p>
-            </div>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">Why does colour matter?</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                Have you ever visited a website and immediately felt overwhelmed, or struggled to read light-grey text on a white background? Colour isn’t just decoration—it quietly guides how people feel, where they look, and whether an app feels intuitive or exhausting to use.
-              </p>
-            </section>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">The Colour Wheel: Harmony &amp; Contrast</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                You don’t need an art degree to build a great palette. Most everyday choices come down to two basic ideas:
-              </p>
-              <div class="space-y-2.5 pl-2">
-                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-[#000054] border border-slate-200">
-                  <p class="text-slate-800 text-sm leading-relaxed">
-                    <strong>Complementary Colours:</strong> These sit directly opposite each other on the colour wheel (like deep blue and bright orange). Because they clash in high contrast, they naturally grab attention. They’re fantastic for warning badges or a big "Submit" button you want no one to miss.
-                  </p>
-                </div>
-                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-indigo-400 border border-slate-200">
-                  <p class="text-slate-800 text-sm leading-relaxed">
-                    <strong>Analogous Colours:</strong> These sit right next to each other (like sky blue, teal, and soft green). They feel calm, cohesive, and easy on the eyes. They make great backgrounds because they don’t fight for attention.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">The Catch: Contrast and Legibility</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                A combination might look aesthetic to you, but if a student in bright sunlight or someone with colour vision differences can’t read it, the design fails. Good design always balances mood with readable contrast ratios.
-              </p>
-            </section>
-
-            <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-medium">
-              (End of text. In the final assessment, students have to design a complete, accessible app landing page.)
-            </div>
+          <!-- Section 1 -->
+          <div class="space-y-2">
+            <h5 class="text-lg sm:text-xl font-bold text-slate-900">1. Why contrast matters</h5>
+            <p class="text-slate-700 text-base leading-relaxed">
+              Have you ever struggled to read an app outside in bright sunlight? That's a contrast problem, and it affects almost everyone at some point, not just people with visual impairments.
+            </p>
+            <p class="text-slate-700 text-base leading-relaxed">
+              Contrast is simply how different two colours look next to each other. Dark text on a white background has high contrast. Light grey text on white has low contrast. The higher the contrast, the easier something is to read.
+            </p>
           </div>
 
-          <!-- DRAFT OPTION 2 CONTENT -->
-          <div id="contentChallengeOpt2" class="hidden p-6 sm:p-8 space-y-5 text-slate-800">
-            <div>
-              <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
-                Event Budget Planning
-              </h4>
-              <p class="text-slate-600 text-xs sm:text-sm mt-1">
-                Context: Your committee is organising a commercial campus event for 300 attendees. Before pitching your financial plan to the sponsors, review this foundational guide on managing fixed versus variable operational expenses.
-              </p>
-            </div>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">Where does all the money go?</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                Organising an event is exciting until the bills arrive. The number-one reason campus festivals, charity fundraisers, or conferences run into trouble isn’t a lack of great ideas—it’s surprise costs that spiral out of control.
-              </p>
-            </section>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">Two Buckets: Fixed vs. Variable Costs</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                To keep sanity and finances intact, event planners split expenses into two straightforward buckets:
-              </p>
-              <div class="space-y-2.5 pl-2">
-                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-[#000054] border border-slate-200">
-                  <p class="text-slate-800 text-sm leading-relaxed">
-                    <strong>Fixed Costs (The Non-Negotiables):</strong> These stay the exact same whether 10 people show up or 200 do. Think venue hire, stage permits, standard insurance, or sound equipment. You pay for them once.
-                  </p>
-                </div>
-                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-emerald-500 border border-slate-200">
-                  <p class="text-slate-800 text-sm leading-relaxed">
-                    <strong>Variable Costs (The Scale-Ups):</strong> These grow with every person who walks through the door. Think catering portions, printed name badges, welcome drinks, and extra security staff.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">The Golden Rule: The Contingency Buffer</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                Even the best-laid plans go sideways. A caterer might cancel last minute, or rain forces you to hire an emergency marquee. That’s why planners always set aside a 10% to 15% rainy-day buffer. If you don’t plan for surprises upfront, they come out of your own pocket.
-              </p>
-            </section>
-
-            <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-medium">
-              (End of text. For their main project, students must submit a viable commercial budget for a 300-person event.)
-            </div>
+          <!-- Section 2 -->
+          <div class="space-y-2">
+            <h5 class="text-lg sm:text-xl font-bold text-slate-900">2. Why it's a bigger deal than it sounds</h5>
+            <p class="text-slate-700 text-base leading-relaxed">
+              When designing with colour, it's easy to focus on mood and vibe and forget function. Picture reading your phone in bright sunlight, using an app late at night with tired eyes, or being colourblind and unable to tell a red warning from a green confirmation. Good contrast solves all of these at once, it's what makes an app usable in real conditions, not just on a designer's monitor.
+            </p>
+            <p class="text-slate-700 text-base font-semibold pt-1">Apps that get this right share a few habits:</p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700 text-base">
+              <li>Dark text on light backgrounds, or light text on dark backgrounds</li>
+              <li>Buttons that clearly stand out from the page around them</li>
+              <li>Warnings or errors that don't rely on colour alone to make their point</li>
+            </ul>
           </div>
 
-          <!-- DRAFT OPTION 3 CONTENT -->
-          <div id="contentChallengeOpt3" class="hidden p-6 sm:p-8 space-y-5 text-slate-800">
-            <div>
-              <h4 class="text-xl sm:text-2xl font-bold text-[#000054]">
-                Three-Point Studio Lighting
-              </h4>
-              <p class="text-slate-600 text-xs sm:text-sm mt-1">
-                Context: As part of your upcoming digital video assessment, you must light and record an interview subject in the broadcast studio. Learn how to transform flat camera imagery into three-dimensional cinematic depth.
-              </p>
+          <!-- Section 3 -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <h5 class="text-lg sm:text-xl font-bold text-slate-900">3. Fix the palette</h5>
+              <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border border-amber-300">
+                ⭐ Prime Simulation Opportunity
+              </span>
             </div>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">Why do smartphone videos look flat?</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                Have you ever tried recording an interview or a presentation video on your phone, only to look washed out, tired, or lost in the background? Real life is three-dimensional, but cameras flatten everything onto a 2D screen. Lighting is the trick that puts life, shape, and depth back in.
-              </p>
-            </section>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">The Classic Three-Light Recipe</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                You don’t need a Hollywood budget to get a cinematic look. Most professional shoots rely on three basic lights:
-              </p>
-              <div class="space-y-2.5 pl-2">
-                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-[#000054] border border-slate-200">
-                  <p class="text-slate-800 text-sm leading-relaxed">
-                    <strong>Key Light:</strong> Your main hero light. It sits off to one side at an angle, giving the face shape and character while casting natural shadows.
-                  </p>
-                </div>
-                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-amber-400 border border-slate-200">
-                  <p class="text-slate-800 text-sm leading-relaxed">
-                    <strong>Fill Light:</strong> Placed on the other side. Its job is gentle teamwork—it softens those dark shadows so the subject doesn’t look harsh or dramatic (unless that’s what you want!).
-                  </p>
-                </div>
-                <div class="p-3 rounded-lg bg-slate-50 border-l-4 border-purple-500 border border-slate-200">
-                  <p class="text-slate-800 text-sm leading-relaxed">
-                    <strong>Back Light (Hair Light):</strong> Placed behind and above, pointing down. It paints a subtle halo of light along the shoulders and hair, popping the person forward so they don’t melt into a dark wall.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section class="space-y-2">
-              <h5 class="text-base font-bold text-slate-900">The Catch: Mood and Balance</h5>
-              <p class="text-slate-700 text-sm sm:text-[15px] leading-relaxed">
-                Adjusting just one dimmer switch completely changes the story—from a friendly YouTube explainer to a moody film-noir interrogation.
-              </p>
-            </section>
-
-            <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm font-medium">
-              (End of text. In their studio assessment, students must light a live actor to match a specific emotional scene.)
-            </div>
+            <p class="text-slate-700 text-base leading-relaxed">
+              Imagine you've been given a mobile app screen from a campus events app. The current design uses:
+            </p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700 text-base">
+              <li><strong>Header:</strong> Light grey text (<code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">#B0B0B0</code>) on a white background (<code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">#FFFFFF</code>)</li>
+              <li><strong>Primary button:</strong> Yellow (<code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">#F5E050</code>) with white text (<code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">#FFFFFF</code>)</li>
+              <li><strong>Body text:</strong> Medium grey (<code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">#999999</code>) on white (<code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">#FFFFFF</code>)</li>
+            </ul>
+            <p class="text-slate-700 text-base font-semibold">
+              All three combinations fail WCAG contrast standards. Your task:
+            </p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700 text-base">
+              <li>Use a contrast checker (such as WebAIM's Contrast Checker) to test each of the three combinations above. Record the contrast ratio for each.</li>
+              <li>Adjust each colour pair until it passes: at least 4.5:1 for body text, and at least 3:1 for large text and UI components like buttons.</li>
+              <li>Re-check your new combinations and confirm they pass.</li>
+              <li>Write two to three sentences: what did you change, and why does it now work better for a user standing outside in bright sunlight?</li>
+            </ul>
           </div>
 
+          <!-- Section 4: Check your understanding of colour contrast (Static & Clean, matching Phase 4 and reference design) -->
+          <div class="space-y-4 pt-3 border-t border-slate-200">
+            <div>
+              <h5 class="text-lg sm:text-xl font-bold text-slate-900">4. Check your understanding of colour contrast</h5>
+              <p class="text-slate-700 text-sm sm:text-base leading-relaxed mt-1">
+                Inspect whether each pair meets readable standards (≥ 4.5:1):
+              </p>
+            </div>
+
+            <!-- 3 Clean, Static Button Cards (matching Phase 4 preview) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              
+              <!-- Option A Card -->
+              <div class="p-4 bg-white border border-slate-300 rounded-xl space-y-3 shadow-sm">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Option A</span>
+                <div class="p-3 border-2 border-black rounded-xl text-center text-sm font-bold" style="background:#FFFFFF;color:#000000;box-shadow: 0 4px 0 #000;">
+                  Numbers Button
+                </div>
+                <span class="text-xs text-slate-600 block">Black on White (#000000 on #FFFFFF)</span>
+              </div>
+
+              <!-- Option B Card -->
+              <div class="p-4 bg-white border border-slate-300 rounded-xl space-y-3 shadow-sm">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Option B</span>
+                <div class="p-3 border-2 border-black rounded-xl text-center text-sm font-bold" style="background:#FFFFFF;color:#A0C4FF;box-shadow: 0 4px 0 #000;">
+                  Font Button
+                </div>
+                <span class="text-xs text-slate-600 block">Light Blue on White (#A0C4FF on #FFFFFF)</span>
+              </div>
+
+              <!-- Option C Card -->
+              <div class="p-4 bg-white border border-slate-300 rounded-xl space-y-3 shadow-sm">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Option C</span>
+                <div class="p-3 border-2 border-black rounded-xl text-center text-sm font-bold" style="background:#1A1A2E;color:#FFFFFF;box-shadow: 0 4px 0 #000;">
+                  Typography
+                </div>
+                <span class="text-xs text-slate-600 block">White on Navy (#FFFFFF on #1A1A2E)</span>
+              </div>
+
+            </div>
+
+            <!-- Sequence Ending Statement for Phase 2 -->
+            <div class="pt-2">
+              <p class="text-slate-800 text-sm sm:text-base font-semibold leading-relaxed">
+                Good job! Hopefully you can take away at least one practice you'll carry into your own app design assessment.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- STEP 3: IDENTIFY OUTCOMES & ADD NOTES -->
-      <div class="space-y-3">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">3</span>
-            <span>Step 3: Identify what students should be able to achieve, the outcomes of the activities that they will design. Add the note to the board</span>
-          </h3>
+      <!-- ADD TO THE BOARD: SIMULATION CONCEPT -->
+      <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div>
+            <h4 class="text-lg font-bold text-[#000054]">
+              Add Your Simulation Design to the Board
+            </h4>
+            <p class="text-slate-600 text-sm mt-0.5">
+              Post your group's outcome and simulation concept, then transfer it directly to Phase 3.
+            </p>
+          </div>
           <button 
             onclick="transferActiveNotesToStudio()"
-            class="px-4 py-2 bg-[#000054] hover:bg-[#00003c] text-white text-xs sm:text-sm font-bold rounded-lg transition shadow-sm flex items-center gap-1.5"
+            class="px-4 py-2.5 bg-[#000054] hover:bg-[#00003c] text-white text-sm font-bold rounded-lg transition shadow-sm flex items-center gap-1.5 self-start sm:self-auto"
           >
             <span>Transfer to AI Prompt Tool</span> <span>&rarr;</span>
           </button>
         </div>
 
-        <!-- Guidance Box -->
-        <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-200 text-slate-800 text-xs sm:text-sm space-y-2">
-          <div class="flex items-center gap-2 font-bold text-[#000054]">
-            <span class="text-base">🎯</span>
-            <span>Pedagogical Tip: Consider Bloom's Taxonomy &amp; Use Measurable Verbs</span>
-          </div>
-          <p class="text-slate-600 leading-relaxed">
-            Frame outcomes around observable student performance rather than passive understanding:
-          </p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-            <div class="flex items-start gap-2 bg-rose-50 border border-rose-200 p-2.5 rounded-lg text-rose-900">
-              <span class="font-bold text-rose-600 text-sm">✗ Avoid:</span>
-              <span class="leading-relaxed">"Students understand colour theory" (Vague and unmeasurable)</span>
-            </div>
-            <div class="flex items-start gap-2 bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-emerald-900">
-              <span class="font-bold text-emerald-700 text-sm">✓ Use:</span>
-              <span class="leading-relaxed">"Students identify at least 3 ways to group and combine colours (complementary, analogous, triad, monochromatic...)"</span>
-            </div>
-          </div>
-        </div>
-
         <!-- Sticky Note Input Bar -->
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
-            <div class="sm:col-span-3">
-              <label class="block text-xs font-bold text-slate-700 mb-1">Your Group</label>
-              <input 
-                id="stickyAuthor" 
-                type="text" 
-                placeholder="e.g. Group 3" 
-                class="w-full border border-slate-300 rounded-lg p-2 text-xs sm:text-sm bg-white text-slate-800 focus:border-[#000054]"
-              />
-            </div>
-            <div class="sm:col-span-7">
-              <label class="block text-xs font-bold text-slate-700 mb-1">Measurable Learning Outcome / Activity Idea</label>
-              <input 
-                id="stickyText" 
-                type="text" 
-                placeholder="e.g. Students identify at least 3 ways to group and combine colours..."
-                class="w-full border border-slate-300 rounded-lg p-2 text-xs sm:text-sm bg-white text-slate-800 focus:border-[#000054]"
-                onkeydown="if(event.key === 'Enter') addStickyNote();"
-              />
-            </div>
-            <div class="sm:col-span-2 flex items-end">
-              <button 
-                onclick="addStickyNote()" 
-                class="w-full py-2 bg-[#E60028] hover:bg-[#b80020] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm transition"
-              >
-                + Add Note
-              </button>
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end pt-1">
+          <div class="sm:col-span-3">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Your Group</label>
+            <input 
+              id="stickyAuthor" 
+              type="text" 
+              placeholder="e.g. Group 3" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-800 focus:border-[#000054]"
+            />
           </div>
-
-          <!-- Sticky Notes Board -->
-          <div id="stickyNotesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-2">
-            <!-- Dynamically populated sticky notes -->
+          <div class="sm:col-span-7">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Measurable Learning Outcome &amp; Simulation Concept</label>
+            <input 
+              id="stickyText" 
+              type="text" 
+              placeholder="e.g. Students adjust text contrast to WCAG AA via a sunlight glare slider..."
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-800 focus:border-[#000054]"
+              onkeydown="if(event.key === 'Enter') addStickyNote();"
+            />
+          </div>
+          <div class="sm:col-span-2">
+            <button 
+              onclick="addStickyNote()" 
+              class="w-full py-2.5 bg-[#E60028] hover:bg-[#b80020] text-white font-bold text-sm rounded-lg shadow-sm transition"
+            >
+              + Add Note
+            </button>
           </div>
         </div>
+
+        <div id="stickyNotesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-3"></div>
       </div>
 
-      <!-- Clear Navigation Footer -->
-      <div class="pt-4 flex justify-between items-center text-xs sm:text-sm font-semibold">
+      <!-- Navigation Footer -->
+      <div class="pt-4 flex justify-between items-center text-sm font-semibold">
         <button onclick="navigateTo('sequence')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 flex items-center gap-1">
           <span>&lt;</span> Previous: Phase 1 — Experience
         </button>
-        <button onclick="navigateTo('studio')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1 shadow-sm">
+        <button onclick="navigateTo('studio')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] flex items-center gap-1 shadow-sm font-bold">
           <span>Next: Phase 3 — AI Prompt Tool</span> <span>&gt;</span>
         </button>
       </div>
-
     </div>
 
-    <!-- ===================================================================== -->
-    <!-- PHASE 3: AI PROMPT TOOL (CLARIFY & SHAPE)                             -->
-    <!-- ===================================================================== -->
+    <!-- PHASE 3: AI PROMPT TOOL (6 CORE FIELDS) -->
     <div id="tabStudio" class="hidden space-y-6">
       
       <!-- Phase 3 Header -->
@@ -1122,85 +991,142 @@
             Phase 3: AI Prompt Tool
           </h2>
           <p class="text-slate-600 text-sm mt-0.5">
-            Clarify your pedagogical objectives, generate a structured prompt, and create the simulation.
+            Structure your prompt using the 6 core components, aiming for a clean, neat, and intuitive simulation mechanic.
           </p>
         </div>
       </div>
 
-      <!-- Step 1: Clarify Pedagogical Simulation Inputs -->
+      <!-- Framework Banner -->
+      <div class="bg-slate-50 p-5 sm:p-6 rounded-xl border border-slate-200 shadow-sm space-y-3">
+        <h4 class="text-sm font-bold uppercase tracking-wider text-[#000054] flex items-center gap-2">
+          <span>What Every First Prompt Needs</span>
+        </h4>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-1">
+          <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm space-y-0.5">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white font-bold text-xs flex items-center justify-center">1</span>
+            <span class="font-bold text-slate-800 text-xs block">Role</span>
+            <span class="text-[11px] text-slate-500 block leading-tight">Who should the AI act as?</span>
+          </div>
+          <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm space-y-0.5">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white font-bold text-xs flex items-center justify-center">2</span>
+            <span class="font-bold text-slate-800 text-xs block">Request</span>
+            <span class="text-[11px] text-slate-500 block leading-tight">What exactly do you need done?</span>
+          </div>
+          <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm space-y-0.5">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white font-bold text-xs flex items-center justify-center">3</span>
+            <span class="font-bold text-slate-800 text-xs block">Goal</span>
+            <span class="text-[11px] text-slate-500 block leading-tight">What outcome are you after?</span>
+          </div>
+          <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm space-y-0.5">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white font-bold text-xs flex items-center justify-center">4</span>
+            <span class="font-bold text-slate-800 text-xs block">Audience</span>
+            <span class="text-[11px] text-slate-500 block leading-tight">Who is this for?</span>
+          </div>
+          <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm space-y-0.5">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white font-bold text-xs flex items-center justify-center">5</span>
+            <span class="font-bold text-slate-800 text-xs block">Context</span>
+            <span class="text-[11px] text-slate-500 block leading-tight">What background is needed?</span>
+          </div>
+          <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm space-y-0.5">
+            <span class="w-6 h-6 rounded-full bg-[#000054] text-white font-bold text-xs flex items-center justify-center">6</span>
+            <span class="font-bold text-slate-800 text-xs block">Output Spec</span>
+            <span class="text-[11px] text-slate-500 block leading-tight">Look &amp; neat mechanic</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: 6 Aligned Inputs -->
       <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-5">
         <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
           <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">1</span>
-          <span>Step 1: Clarify pedagogical simulation inputs</span>
+          <span>Step 1: Fill in your prompt components</span>
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <!-- Q1: Learning Goal & Cognitive Friction -->
+          <!-- 1. ROLE -->
           <div class="space-y-1.5">
-            <label class="block text-sm font-bold text-slate-800">
-              1. Learning goal and cognitive friction (the hesitation moment)
+            <label class="block text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-[#000054] font-black">1</span>
+              <span>Role (Who should the AI act as?)</span>
             </label>
-            <textarea 
-              id="inputGoalFriction" 
-              rows="4" 
-              class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition" 
-              placeholder="e.g. Students realise that aesthetically pleasing colours fail under bright sunlight or colour blindness. The simulation causes them to fail WCAG contrast checks when adjusting hue sliders."
+            <input 
+              id="promptRole" 
+              type="text" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition"
+              value="Act as a Learning Designer and Educational Technologist."
               oninput="generateCleanPrompt()"
-            ></textarea>
-            <span class="text-xs text-slate-500 block">
-              What moment of hesitation or dilemma forces students to recognise an unstated need?
-            </span>
+            />
           </div>
 
-          <!-- Q2: Who are the learners? -->
+          <!-- 2. REQUEST -->
           <div class="space-y-1.5">
-            <label class="block text-sm font-bold text-slate-800">
-              2. Who are the learners? (context and discipline)
+            <label class="block text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-[#000054] font-black">2</span>
+              <span>Request (What exactly do you need done?)</span>
             </label>
             <textarea 
-              id="inputLearners" 
-              rows="4" 
-              class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition" 
-              placeholder="e.g. 2nd-year undergraduate students in Graphic Design, Web UX, or Digital Media."
+              id="promptRequest" 
+              rows="2" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition"
               oninput="generateCleanPrompt()"
-            ></textarea>
-            <span class="text-xs text-slate-500 block">
-              Who is participating in this learning activity?
-            </span>
+            >Build a self-contained HTML simulation with a clean, neat, and intuitive mechanic (not overly complex or overwhelming) that lets students test a mobile app colour palette under a simulated bright-sunlight filter.</textarea>
           </div>
 
-          <!-- Q3: What is the simulation about? -->
+          <!-- 3. GOAL -->
           <div class="space-y-1.5">
-            <label class="block text-sm font-bold text-slate-800">
-              3. What is this simulation about? (core mechanics and behaviours)
+            <label class="block text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-[#000054] font-black">3</span>
+              <span>Goal (What outcome are you after?)</span>
             </label>
             <textarea 
-              id="inputSimulationAbout" 
-              rows="4" 
-              class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition" 
-              placeholder="e.g. An interactive digital colour palette tester with hue, saturation, and lightness sliders, live button preview, and a simulated bright sunlight / colour-blindness toggle filter."
+              id="promptGoal" 
+              rows="3" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition"
               oninput="generateCleanPrompt()"
-            ></textarea>
-            <span class="text-xs text-slate-500 block">
-              What digital or physical tool are students interacting with?
-            </span>
+            >Students should be able to: identify the impact of different light sources on screen readability, and adjust text contrast to meet readable standards.</textarea>
           </div>
 
-          <!-- Q4: Post-simulation task -->
+          <!-- 4. AUDIENCE -->
           <div class="space-y-1.5">
-            <label class="block text-sm font-bold text-slate-800">
-              4. Post-simulation student task (what they do immediately after)
+            <label class="block text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-[#000054] font-black">4</span>
+              <span>Audience (Who is this for?)</span>
+            </label>
+            <input 
+              id="promptAudience" 
+              type="text" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition"
+              value="Audience: 2nd-year Graphic Design / UX students."
+              oninput="generateCleanPrompt()"
+            />
+          </div>
+
+          <!-- 5. CONTEXT -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-[#000054] font-black">5</span>
+              <span>Context (What background does the AI need?)</span>
             </label>
             <textarea 
-              id="inputPostTask" 
-              rows="4" 
-              class="w-full border border-slate-300 rounded-lg p-3 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition" 
-              placeholder="e.g. Adjust their palette until it passes WCAG AA contrast, and write 3 verifiable engineering requirements for their mobile app interface."
+              id="promptContext" 
+              rows="3" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition"
               oninput="generateCleanPrompt()"
-            ></textarea>
-            <span class="text-xs text-slate-500 block">
-              What do students do with their observation to bridge to the assessment?
-            </span>
+            >Context: this is an active exercise to introduce colour contrast and accessibility; students have a basic understanding of colour theory but tend to overlook real-world ambient glare.</textarea>
+          </div>
+
+          <!-- 6. OUTPUT SPEC -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-[#000054] font-black">6</span>
+              <span>Output Spec (What should it look like &amp; mechanics?)</span>
+            </label>
+            <textarea 
+              id="promptOutputSpec" 
+              rows="3" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-slate-800 text-sm focus:border-[#000054] focus:ring-1 focus:ring-[#000054] transition"
+              oninput="generateCleanPrompt()"
+            >Output: one runnable HTML file, clean and neat mechanics (not overly complex or overwhelming), light-mode with strict white background (#ffffff), works on desktop and laptop browsers.</textarea>
           </div>
         </div>
       </div>
@@ -1218,10 +1144,10 @@
           </button>
         </div>
 
-        <pre id="cleanPromptOutput" class="w-full h-72 sm:h-80 bg-slate-900 text-slate-100 p-4 sm:p-5 rounded-xl font-mono text-[13px] leading-relaxed overflow-y-auto whitespace-pre-wrap select-all border border-slate-800"></pre>
+        <pre id="cleanPromptOutput" class="w-full h-80 bg-slate-900 text-slate-100 p-4 sm:p-5 rounded-xl font-mono text-[13px] leading-relaxed overflow-y-auto whitespace-pre-wrap select-all border border-slate-800"></pre>
       </div>
 
-      <!-- Step 3: Generate the Simulation in Gemini Canvas -->
+      <!-- Step 3: Instructions with Free Account Tip -->
       <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-4">
         <h3 class="text-base sm:text-lg font-bold text-[#000054] flex items-center gap-2">
           <span class="w-6 h-6 rounded-full bg-[#000054] text-white flex items-center justify-center text-xs">3</span>
@@ -1235,7 +1161,7 @@
               <span>Open Gemini &amp; Sign In</span>
             </div>
             <p class="text-slate-600 leading-relaxed">
-              Navigate to <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="text-[#000054] underline font-semibold">gemini.google.com</a>. You can use your free personal Google / Gemini account to build and run this simulation.
+              Navigate to <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="text-[#000054] underline font-semibold">gemini.google.com</a>. You can use your free personal Google account to build and run this simulation.
             </p>
           </div>
 
@@ -1255,35 +1181,33 @@
               <span>Preview &amp; Refine</span>
             </div>
             <p class="text-slate-600 leading-relaxed">
-              Click <strong>Preview</strong> in Gemini Canvas to interact with your simulation. Ask Gemini to tweak button labels, add audio, or intensify the friction moment.
+              Click <strong>Preview</strong> in Gemini Canvas to test the simulation mechanic. Ask Gemini to keep it neat and intuitive.
             </p>
           </div>
         </div>
 
+        <!-- Token Limit & Free Account Advisory Callout -->
         <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 flex items-start gap-2.5 text-xs sm:text-sm text-slate-800">
           <span class="text-base text-amber-700 font-bold flex-shrink-0">💡</span>
           <div class="leading-relaxed">
-            <strong class="text-amber-900">Running out of tokens or hit a message limit?</strong>
-            <span> Simply download the in-progress <code class="bg-amber-100 text-amber-900 px-1 py-0.5 rounded font-mono text-[11px]">.html</code> file from Gemini Canvas. You can then switch to another Google account or paste the file/code into another tool like Claude (<a href="https://claude.ai" target="_blank" rel="noopener noreferrer" class="text-[#000054] underline font-semibold">claude.ai</a>) to keep refining.</span>
+            <strong class="text-amber-900">Running out of tokens or hit a message limit on your free account?</strong>
+            <span> Simply download the in-progress <code class="bg-amber-100 text-amber-900 px-1 py-0.5 rounded font-mono text-[11px]">.html</code> file from Gemini Canvas. You can then switch to another Google account or paste the file/code into another tool like Claude (<a href="https://claude.ai" target="_blank" rel="noopener noreferrer" class="text-[#000054] underline font-semibold">claude.ai</a>) to keep refining without starting from scratch.</span>
           </div>
         </div>
       </div>
 
-      <!-- Clear Navigation Footer -->
-      <div class="pt-4 flex justify-between items-center text-xs sm:text-sm font-semibold">
+      <!-- Navigation Footer -->
+      <div class="pt-4 flex justify-between items-center text-sm font-semibold">
         <button onclick="navigateTo('challenge')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
           &lt; Previous: Phase 2 — The Challenge
         </button>
-        <button onclick="navigateTo('showcase')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm">
+        <button onclick="navigateTo('showcase')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm font-bold">
           Next: Phase 4 — Showcase &amp; Embed &gt;
         </button>
       </div>
-
     </div>
 
-    <!-- ===================================================================== -->
-    <!-- PHASE 4: SHOWCASE & EMBED SIMULATION                                 -->
-    <!-- ===================================================================== -->
+    <!-- PHASE 4: SHOWCASE & EMBED SIMULATION -->
     <div id="tabShowcase" class="hidden space-y-6">
       
       <!-- Phase 4 Header -->
@@ -1296,7 +1220,7 @@
             Activities and Simulations Showcase Wall
           </h2>
           <p class="text-slate-600 text-sm mt-0.5">
-            Share your group's simulation, celebrate creative friction points, and explore what others built.
+            Share your group's simulation on Padlet and compile it back into the Colour Theory reading sequence.
           </p>
         </div>
 
@@ -1330,30 +1254,26 @@
       <!-- SEQUENCE & SIMULATION COMPILER / EMBEDDER -->
       <div class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-5">
         <div class="border-b border-slate-200 pb-3">
-          <h3 class="text-base sm:text-lg font-bold text-[#000054]">
+          <h3 class="text-lg font-bold text-[#000054]">
             Embed Your Simulation Back into the Sequence
           </h3>
           <p class="text-slate-600 text-sm mt-0.5">
-            Choose your sequence option, choose where to place the simulation, and drop in your HTML file to compile the complete active learning module.
+            Place your interactive simulation directly inside the Colour Theory reading sequence to complete the active learning module.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div class="space-y-1.5">
             <label class="block text-sm font-bold text-slate-800">
-              1. Choose Course Sequence
+              1. Course Sequence
             </label>
-            <select 
-              id="embedSequenceOption" 
-              class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-800 focus:border-[#000054] focus:ring-1 focus:ring-[#000054]"
-              onchange="compileCompleteSequence()"
-            >
-              <option value="1">Option 1: Colour Theory in Digital Design</option>
-              <option value="2">Option 2: Event Budget Planning</option>
-              <option value="3">Option 3: Three-Point Studio Lighting</option>
-              <option value="custom">Custom / Own Topic Draft</option>
-            </select>
-            <span class="text-xs text-slate-500 block">Select which reading draft to embed into.</span>
+            <input 
+              type="text" 
+              disabled 
+              value="Colour Theory in Digital Design" 
+              class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-slate-50 text-slate-700 font-semibold"
+            />
+            <span class="text-xs text-slate-500 block">The core digital design module.</span>
           </div>
 
           <div class="space-y-1.5">
@@ -1365,9 +1285,10 @@
               class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white text-slate-800 focus:border-[#000054] focus:ring-1 focus:ring-[#000054]"
               onchange="compileCompleteSequence()"
             >
-              <option value="section2" selected>Inside Section 2: Core Concept (Recommended)</option>
-              <option value="section1">After Section 1: Opening Hook</option>
-              <option value="section3">Before Section 3: Assessment Wrap-up</option>
+              <option value="section3" selected>Inside Section 3: Fix the palette (Recommended)</option>
+              <option value="section1">After Section 1: Why contrast matters</option>
+              <option value="section2">After Section 2: Why it's a bigger deal</option>
+              <option value="section4">Before Section 4: Check understanding</option>
             </select>
             <span class="text-xs text-slate-500 block">Determines where the friction trigger appears.</span>
           </div>
@@ -1410,29 +1331,17 @@
           <details class="text-xs sm:text-sm text-slate-700 group">
             <summary class="cursor-pointer font-bold text-[#000054] hover:underline list-none flex items-center gap-1">
               <span class="group-open:rotate-90 transition-transform inline-block">&rsaquo;</span>
-              <span>Advanced: View/Edit Raw Simulation Code or Custom Course Text</span>
+              <span>Advanced: View/Edit Raw Simulation Code</span>
             </summary>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 pt-2 border-t border-slate-200">
-              <div class="space-y-1">
-                <label class="block font-bold text-xs text-slate-700">Custom Sequence Text (if "Custom" option is chosen)</label>
-                <textarea 
-                  id="embedCustomSeqText" 
-                  rows="5" 
-                  class="w-full border border-slate-300 rounded-lg p-2.5 font-mono text-xs text-slate-800"
-                  placeholder="Paste your own lesson text here..."
-                  oninput="compileCompleteSequence()"
-                ></textarea>
-              </div>
-              <div class="space-y-1">
-                <label class="block font-bold text-xs text-slate-700">Raw Simulation HTML/JS Code</label>
-                <textarea 
-                  id="embedSimCode" 
-                  rows="5" 
-                  class="w-full border border-slate-300 rounded-lg p-2.5 font-mono text-xs text-slate-800"
-                  placeholder="Or paste code here directly..."
-                  oninput="compileCompleteSequence()"
-                ></textarea>
-              </div>
+            <div class="mt-3 pt-2 border-t border-slate-200">
+              <label class="block font-bold text-xs text-slate-700 mb-1">Raw Simulation HTML/JS Code</label>
+              <textarea 
+                id="embedSimCode" 
+                rows="5" 
+                class="w-full border border-slate-300 rounded-lg p-2.5 font-mono text-xs text-slate-800"
+                placeholder="Or paste code here directly..."
+                oninput="compileCompleteSequence()"
+              ></textarea>
             </div>
           </details>
         </div>
@@ -1477,11 +1386,11 @@
       </div>
 
       <!-- Navigation Footer -->
-      <div class="pt-2 flex justify-between items-center text-xs sm:text-sm font-semibold">
+      <div class="pt-2 flex justify-between items-center text-sm font-semibold">
         <button onclick="navigateTo('studio')" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100">
           &lt; Previous: Phase 3 — AI Prompt Tool
         </button>
-        <button onclick="navigateTo('home')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm">
+        <button onclick="navigateTo('home')" class="px-5 py-2.5 rounded-lg bg-[#000054] text-white hover:bg-[#00003c] shadow-sm font-bold">
           Return to Overview &gt;
         </button>
       </div>
@@ -1498,14 +1407,9 @@
     </div>
   </footer>
 
-  <!-- ===================================================================== -->
-  <!-- REACT COMPONENT: RETRO-MODERN ARCADE VENDING MACHINE                  -->
-  <!-- ===================================================================== -->
+  <!-- REACT COMPONENT: RETRO-MODERN ARCADE VENDING MACHINE -->
   <script type="text/babel" src="vending-machine.js"></script>
-
-  <!-- ===================================================================== -->
-  <!-- JAVASCRIPT: TEACHER / DEV MODE & PUBLISHING SYSTEM                    -->
-  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT: LOGIC & FACILITATOR CONTROLS -->
   <script src="app.js"></script>
 
 </body>

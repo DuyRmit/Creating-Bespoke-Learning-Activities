@@ -50,8 +50,9 @@ const phaseConfig = {
         const res = await fetch(`${API_BASE_URL}/api/state`);
         if (!res.ok) throw new Error('Bad response fetching state');
         const data = await res.json();
-        if (data && data.publishedPhases) {
-          publishedPhases = data.publishedPhases;
+        if (data && typeof data === 'object') {
+          const { sequence, challenge, studio, showcase } = data;
+          publishedPhases = { sequence: !!sequence, challenge: !!challenge, studio: !!studio, showcase: !!showcase };
           updateFacilitatorModeUI();
           updatePhaseBadgesUI();
           if (currentActiveTab === 'locked' && attemptedLockedTab && publishedPhases[attemptedLockedTab]) {
@@ -75,7 +76,7 @@ const phaseConfig = {
         const res = await fetch(`${API_BASE_URL}/api/state`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ passcode: facilitatorPasscode, publishedPhases })
+          body: JSON.stringify({ passcode: facilitatorPasscode, ...publishedPhases })
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
@@ -152,7 +153,7 @@ const phaseConfig = {
         });
         const data = await res.json().catch(() => ({}));
 
-        if (res.ok && data.valid) {
+        if (res.ok && data.ok) {
           isFacilitatorMode = true;
           facilitatorPasscode = enteredPasscode;
           closePasswordModal();

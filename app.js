@@ -44,23 +44,34 @@ const phaseConfig = {
     let currentActiveTab = 'home';
     let attemptedLockedTab = null;
     let statePollingInterval = null;
+    let lastKnownUpdatedAt = null; // guards against a stale/late fetch reverting a just-made change
+
+    function applyServerState(data) {
+      // A late-arriving response (from the initial load fetch or a poll tick)
+      // can resolve AFTER a more recent local push. Only apply it if it's not
+      // older than the freshest state we already know about, so it can't
+      // clobber a change the facilitator just made.
+      if (!data || typeof data !== 'object') return;
+      if (lastKnownUpdatedAt && data.updatedAt && data.updatedAt <= lastKnownUpdatedAt) return;
+
+      const { sequence, challenge, studio, showcase, updatedAt } = data;
+      publishedPhases = { sequence: !!sequence, challenge: !!challenge, studio: !!studio, showcase: !!showcase };
+      if (updatedAt) lastKnownUpdatedAt = updatedAt;
+      updateFacilitatorModeUI();
+      updatePhaseBadgesUI();
+      if (currentActiveTab === 'locked' && attemptedLockedTab && publishedPhases[attemptedLockedTab]) {
+        navigateTo(attemptedLockedTab);
+      } else if (currentActiveTab !== 'home' && currentActiveTab !== 'locked' && !publishedPhases[currentActiveTab] && !isFacilitatorMode) {
+        navigateToLatestUnlocked();
+      }
+    }
 
     async function fetchPublishedState() {
       try {
         const res = await fetch(`${API_BASE_URL}/api/state`);
         if (!res.ok) throw new Error('Bad response fetching state');
         const data = await res.json();
-        if (data && typeof data === 'object') {
-          const { sequence, challenge, studio, showcase } = data;
-          publishedPhases = { sequence: !!sequence, challenge: !!challenge, studio: !!studio, showcase: !!showcase };
-          updateFacilitatorModeUI();
-          updatePhaseBadgesUI();
-          if (currentActiveTab === 'locked' && attemptedLockedTab && publishedPhases[attemptedLockedTab]) {
-            navigateTo(attemptedLockedTab);
-          } else if (currentActiveTab !== 'home' && currentActiveTab !== 'locked' && !publishedPhases[currentActiveTab] && !isFacilitatorMode) {
-            navigateToLatestUnlocked();
-          }
-        }
+        applyServerState(data);
       } catch (e) {
         console.error('Could not sync phase state from server:', e);
       }
@@ -76,12 +87,14 @@ const phaseConfig = {
         const res = await fetch(`${API_BASE_URL}/api/state`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ passcode: facilitatorPasscode, ...publishedPhases })
+          body: JSON.stringify({ passcode: facilitatorPasscode, publishedPhases })
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
           throw new Error(err.error || 'Failed to update state on server');
         }
+        const data = await res.json().catch(() => null);
+        if (data) applyServerState(data);
       } catch (e) {
         console.error('Could not push phase state to server:', e);
         showToast('Could not sync that change to the server. Check your connection and try again.');

@@ -110,17 +110,30 @@ const phaseConfig = {
     let rewrittenWishlist = {};
     let lastKnownWishlistUpdatedAt = null;
     let wishlistPollingInterval = null;
+    // IDs of posts *this browser* created, so the rewrite exercise below
+    // only ever shows the person their own wish, never their classmates'.
+    let myWishlistPostIds = [];
 
     try {
       const savedRewrites = localStorage.getItem('rmit_phase1_rewritten_wishlist');
       if (savedRewrites) {
         rewrittenWishlist = JSON.parse(savedRewrites);
       }
+      const savedMyIds = localStorage.getItem('rmit_phase1_my_wishlist_ids');
+      if (savedMyIds) {
+        myWishlistPostIds = JSON.parse(savedMyIds);
+      }
     } catch(e) {}
 
     function saveRewrittenWishlist() {
       try {
         localStorage.setItem('rmit_phase1_rewritten_wishlist', JSON.stringify(rewrittenWishlist));
+      } catch(e) {}
+    }
+
+    function saveMyWishlistPostIds() {
+      try {
+        localStorage.setItem('rmit_phase1_my_wishlist_ids', JSON.stringify(myWishlistPostIds));
       } catch(e) {}
     }
 
@@ -855,6 +868,8 @@ const phaseConfig = {
       };
 
       wishlistPosts.unshift(newPost);
+      myWishlistPostIds.push(newPost.id);
+      saveMyWishlistPostIds();
       pushWishlistPosts();
       renderWishlistDiscussionFeed();
       renderRewriteWishlistActivity();
@@ -866,6 +881,8 @@ const phaseConfig = {
     function deleteWishlistPost(id) {
       wishlistPosts = wishlistPosts.filter(p => p.id !== id);
       delete rewrittenWishlist[id];
+      myWishlistPostIds = myWishlistPostIds.filter(pid => pid !== id);
+      saveMyWishlistPostIds();
       pushWishlistPosts();
       saveRewrittenWishlist();
       renderWishlistDiscussionFeed();
@@ -908,17 +925,20 @@ const phaseConfig = {
       const container = document.getElementById('rewriteWishlistContainer');
       if (!container) return;
 
-      if (wishlistPosts.length === 0) {
+      // Only ever the notes THIS browser posted — not the whole class board.
+      const myPosts = wishlistPosts.filter(p => myWishlistPostIds.includes(p.id));
+
+      if (myPosts.length === 0) {
         container.innerHTML = `
           <div class="p-6 text-center text-slate-500 text-sm bg-slate-50 border border-dashed border-slate-300 rounded-xl space-y-1">
-            <span class="font-bold text-slate-700 block">No wishlist items posted yet</span>
-            <p class="text-xs text-slate-500">Post a wishlist note above in the discussion box, and it will appear here ready to be rewritten into a measurable requirement!</p>
+            <span class="font-bold text-slate-700 block">You haven't posted a wishlist note yet</span>
+            <p class="text-xs text-slate-500">Post your own wishlist note above in the discussion box, and it will appear here ready for you to rewrite into a measurable requirement!</p>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = wishlistPosts.map(p => {
+      container.innerHTML = myPosts.map(p => {
         const savedText = rewrittenWishlist[p.id] || '';
         return `
           <div class="p-4 rounded-xl border border-slate-300 bg-slate-50 space-y-3">

@@ -1,4 +1,4 @@
-    const { useState, useEffect } = React;
+const { useState, useEffect } = React;
 
     const playSynthSound = (type) => {
       try {
@@ -122,9 +122,7 @@
             osc.stop(now + delay + 0.14);
           });
         }
-      } catch (err) {
-        // Audio playback fallback
-      }
+      } catch (err) {}
     };
 
     const CocaColaSVG = () => (
@@ -442,21 +440,11 @@
 
       return (
         <div className="w-full max-w-[1020px] h-[640px] bg-zinc-900 rounded-[2rem] border-[10px] border-zinc-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] flex overflow-hidden ring-1 ring-white/10 text-white relative">
-          
-          <div className={`absolute top-1 left-12 right-12 h-1 rounded-full transition-all duration-500 opacity-80 animate-led-pulse ${
-            currentTheme === 'pink' ? 'bg-pink-500 shadow-[0_0_12px_#ec4899]' :
-            currentTheme === 'cyan' ? 'bg-cyan-400 shadow-[0_0_12px_#06b6d4]' :
-            currentTheme === 'yellow' ? 'bg-yellow-400 shadow-[0_0_12px_#eab308]' :
-            'bg-zinc-200 shadow-[0_0_12px_#ffffff]'
-          }`}></div>
+          <div className="absolute top-1 left-12 right-12 h-1 rounded-full bg-cyan-400 shadow-[0_0_12px_#06b6d4] opacity-80 animate-led-pulse"></div>
 
           {/* LEFT CHAMBER */}
           <div className="flex-1 bg-zinc-950/40 p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden h-full">
-            <div className={`absolute inset-0 transition-opacity duration-700 opacity-10 pointer-events-none ${
-              currentTheme === 'pink' ? 'bg-pink-500' :
-              currentTheme === 'cyan' ? 'bg-cyan-500' :
-              currentTheme === 'yellow' ? 'bg-yellow-500' : 'bg-white'
-            }`}></div>
+            <div className="absolute inset-0 bg-cyan-500 opacity-10 pointer-events-none"></div>
 
             <div className="flex-1 grid grid-rows-3 gap-4 relative z-10 pt-2">
               {['A', 'B', 'C'].map((rowLetter) => (
@@ -510,12 +498,6 @@
             <div className="absolute inset-0 glass-glare rounded-2xl z-20"></div>
 
             <div className="h-24 mt-3 bg-zinc-950 rounded-xl border-t-[5px] border-zinc-900 shadow-[inset_0_8px_16px_rgba(0,0,0,0.8)] relative flex items-center justify-center overflow-hidden z-20 group">
-              <div className={`absolute top-0 inset-x-0 h-[1.5px] opacity-30 transition-colors ${
-                currentTheme === 'pink' ? 'bg-pink-500' :
-                currentTheme === 'cyan' ? 'bg-cyan-400' :
-                currentTheme === 'yellow' ? 'bg-yellow-400' : 'bg-white'
-              }`}></div>
-
               {step === 'dispensing' && selectedItem && (
                 <div className="absolute animate-bounce flex flex-col items-center z-30">
                   <div className={`w-12 h-16 ${selectedItem.color} rounded-md shadow-2xl flex flex-col items-center justify-center border border-white/10 transform rotate-12`}>
@@ -529,8 +511,7 @@
                   </button>
                 </div>
               )}
-
-              <span className="text-zinc-800 font-extrabold text-xl tracking-[1.5rem] select-none pl-[1.5rem] group-hover:text-zinc-700 transition-colors">PUSH</span>
+              <span className="text-zinc-800 font-extrabold text-xl tracking-[1.5rem] select-none pl-[1.5rem]">PUSH</span>
             </div>
           </div>
 
@@ -544,9 +525,7 @@
                   <div className="flex items-center justify-between text-[9px] uppercase font-bold tracking-widest relative z-10 opacity-70">
                     <span>SYSTEM DIAG</span>
                     <div className="flex items-center space-x-1">
-                      <div className={`w-1.5 h-1.5 rounded-full animate-ping ${
-                        step === 'error' ? 'bg-red-500' : 'bg-emerald-400'
-                      }`}></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></div>
                       <span>{step}</span>
                     </div>
                   </div>
@@ -651,7 +630,7 @@
                       setCurrentTheme(themes[nextIdx]);
                       playSound('click');
                     }}
-                    className="px-2 py-0.5 rounded border border-zinc-700 bg-zinc-750 text-zinc-200 text-[9px] font-bold cursor-pointer"
+                    className="px-2 py-0.5 rounded border border-zinc-700 bg-zinc-755 text-zinc-200 text-[9px] font-bold cursor-pointer"
                   >
                     LED
                   </button>

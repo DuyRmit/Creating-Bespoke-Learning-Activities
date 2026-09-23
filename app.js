@@ -102,30 +102,62 @@ const phaseConfig = {
     }
 
     /* Wishlist Discussion Posts */
+    /* Posts themselves are now synced via the same Cloudflare Worker used for
+       phase state, so every participant sees the same board (see handoff.md).
+       rewrittenWishlist stays in localStorage: it's each student's own
+       individual rewrite exercise, not something that needs to be shared. */
     let wishlistPosts = [];
     let rewrittenWishlist = {};
+    let lastKnownWishlistUpdatedAt = null;
+    let wishlistPollingInterval = null;
 
     try {
-      const savedWishlist = localStorage.getItem('rmit_phase1_wishlist_feed_clean');
-      if (savedWishlist) {
-        wishlistPosts = JSON.parse(savedWishlist);
-      }
       const savedRewrites = localStorage.getItem('rmit_phase1_rewritten_wishlist');
       if (savedRewrites) {
         rewrittenWishlist = JSON.parse(savedRewrites);
       }
     } catch(e) {}
 
-    function saveWishlistPosts() {
-      try {
-        localStorage.setItem('rmit_phase1_wishlist_feed_clean', JSON.stringify(wishlistPosts));
-      } catch(e) {}
-    }
-
     function saveRewrittenWishlist() {
       try {
         localStorage.setItem('rmit_phase1_rewritten_wishlist', JSON.stringify(rewrittenWishlist));
       } catch(e) {}
+    }
+
+    async function fetchWishlistPosts() {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/wishlist`);
+        if (!res.ok) throw new Error('Bad response fetching wishlist');
+        const data = await res.json();
+        if (lastKnownWishlistUpdatedAt && data.updatedAt && data.updatedAt <= lastKnownWishlistUpdatedAt) return;
+        wishlistPosts = data.posts || [];
+        if (data.updatedAt) lastKnownWishlistUpdatedAt = data.updatedAt;
+        renderWishlistDiscussionFeed();
+        renderRewriteWishlistActivity();
+      } catch (e) {
+        console.error('Could not sync wishlist from server:', e);
+      }
+    }
+
+    async function pushWishlistPosts() {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/wishlist`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ posts: wishlistPosts })
+        });
+        if (!res.ok) throw new Error('Failed to update wishlist on server');
+        const data = await res.json().catch(() => null);
+        if (data && data.updatedAt) lastKnownWishlistUpdatedAt = data.updatedAt;
+      } catch (e) {
+        console.error('Could not push wishlist to server:', e);
+        showToast('Could not sync that note to the server. Check your connection and try again.');
+      }
+    }
+
+    function startWishlistPolling() {
+      if (wishlistPollingInterval) return;
+      wishlistPollingInterval = setInterval(fetchWishlistPosts, STATE_POLL_INTERVAL_MS);
     }
 
     /* Facilitator Mode Controller */
@@ -823,7 +855,7 @@ const phaseConfig = {
       };
 
       wishlistPosts.unshift(newPost);
-      saveWishlistPosts();
+      pushWishlistPosts();
       renderWishlistDiscussionFeed();
       renderRewriteWishlistActivity();
 
@@ -834,7 +866,7 @@ const phaseConfig = {
     function deleteWishlistPost(id) {
       wishlistPosts = wishlistPosts.filter(p => p.id !== id);
       delete rewrittenWishlist[id];
-      saveWishlistPosts();
+      pushWishlistPosts();
       saveRewrittenWishlist();
       renderWishlistDiscussionFeed();
       renderRewriteWishlistActivity();
@@ -1037,4 +1069,9 @@ ${outputSpec}`;
       // keep polling so every participant's tab stays in sync.
       fetchPublishedState();
       startStatePolling();
+
+      // Same pattern for the wishlist board: pull the shared posts, then
+      // keep polling so everyone sees new notes without refreshing.
+      fetchWishlistPosts();
+      startWishlistPolling();
     });

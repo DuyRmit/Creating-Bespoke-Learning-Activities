@@ -31,7 +31,7 @@ const phaseConfig = {
        published phases. The passcode is never stored client-side: it is only
        held in memory for the current tab, after the Worker confirms it. */
     const API_BASE_URL = 'https://creating-bespoke-learning-activities.duy-doan6.workers.dev';
-    const STATE_POLL_INTERVAL_MS = 8000;
+    const STATE_POLL_INTERVAL_MS = 2000;
 
     let isFacilitatorMode = false;
     let facilitatorPasscode = null; // in-memory only, cleared on exit/reload
